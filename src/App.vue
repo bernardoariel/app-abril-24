@@ -8,9 +8,7 @@ import FooterComponent from './components/FooterComponent.vue';
   <div class="bg-gray-100 min-h-screen">
     <NavHeader />
     <div class="max-w-custom mx-auto px-4 bg-gray-100">
-      <RouterView v-slot="{ Component, route }">
-        <component :is="Component" :key="route.name" />
-      </RouterView>
+      <RouterView />
     </div>
     <FooterComponent />
   </div>

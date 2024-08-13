@@ -12,7 +12,7 @@ const routes = [
     component: LoginView,
   },
   {
-    path: '/products',
+    path: '/home',
     name: 'productList',
     component: ProductListView,
   },
@@ -28,7 +28,7 @@ const routes = [
   },
   {
     path: '/',
-    redirect: '/login',
+    redirect: '/home',
   },
   {
     path: '/:pathMatch(.*)*',

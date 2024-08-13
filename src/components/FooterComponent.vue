@@ -7,17 +7,17 @@ import StaticIcon from './icons/StaticIcon.vue';
 <template>
   <footer>
     <div class="btm-nav">
-      <router-link to="/search">
+      <router-link to="/home">
         <button>
           <HomeIcon />
         </button>
       </router-link>
-      <router-link to="/info">
+      <router-link to="/search">
         <button class="disabled" tabindex="-1" aria-disabled="true">
           <InfoIcon />
         </button>
       </router-link>
-      <router-link to="/static">
+      <router-link to="/home">
         <button>
           <StaticIcon />
         </button>

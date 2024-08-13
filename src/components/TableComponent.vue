@@ -50,11 +50,11 @@
         </tbody>
       </table>
     </div>
-    <div class="flex items-center">
+    <div class="flex items-center justify-center mt-4">
       <button
         class="px-4 py-2 border rounded"
         :class="{ hidden: page === 1 }"
-        @click="() => setPage(page - 1)"
+        @click="setPage(page - 1)"
       >
         Previous
       </button>
@@ -62,7 +62,7 @@
       <button
         class="px-4 py-2 border rounded"
         :class="{ hidden: page === pages }"
-        @click="() => setPage(page + 1)"
+        @click="setPage(page + 1)"
       >
         Next
       </button>
@@ -71,13 +71,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { columns, productsData } from './data.js'; // Asegúrate de importar correctamente los datos
+import { columns } from './data.js';
+import { productsData } from './MOCK_DATA.js';
 
 const router = useRouter();
 const filterValue = ref('');
-const rowsPerPage = ref(10);
+const rowsPerPage = ref(3);
 const page = ref(1);
 
 const pages = computed(() => Math.ceil(productsData.length / rowsPerPage.value));
@@ -95,11 +96,15 @@ const filteredItems = computed(() => {
   return filteredProducts;
 });
 
-const items = computed(() => {
+const items = ref([]);
+
+const updateItems = () => {
   const start = (page.value - 1) * rowsPerPage.value;
   const end = start + rowsPerPage.value;
-  return filteredItems.value.slice(start, end);
-});
+  items.value = filteredItems.value.slice(start, end);
+};
+
+watch([page, filteredItems], updateItems, { immediate: true });
 
 const getColumnClass = (columnName: string) => {
   switch (columnName) {
@@ -115,10 +120,8 @@ const getColumnClass = (columnName: string) => {
 };
 
 const setPage = (newPage: number) => {
-  page.value = newPage;
+  if (newPage >= 1 && newPage <= pages.value) {
+    page.value = newPage;
+  }
 };
 </script>
-
-<style scoped>
-/* Puedes agregar estilos adicionales aquí si es necesario */
-</style>
