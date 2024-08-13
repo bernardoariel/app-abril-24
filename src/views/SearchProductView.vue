@@ -13,12 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { useProductStore } from '@/store/useProductStore';
 
-const product = ref('');
+const productStore = useProductStore();
 
-const searchProduct = () => {
-  // Lógica para buscar el producto
-  console.log('Buscando producto:', product.value);
-};
+const { product, searchProduct } = productStore;
 </script>

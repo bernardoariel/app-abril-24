@@ -8,38 +8,43 @@
               v-for="column in columns"
               :key="column.uid"
               :class="getColumnClass(column.name)"
-              class="py-3 px-5 border-b text-left"
+              class="py-3 px-5 border-b text-left text-xs"
             >
               {{ column.name }}
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in items" :key="item.id" class="border-b hover:bg-gray-100">
+          <tr v-if="items && items.length === 0">
+            <td colspan="100%" class="text-center py-4 text-gray-500">
+              No se encontraron productos.
+            </td>
+          </tr>
+          <tr v-for="item in items" :key="item.CodProducto" class="border-b hover:bg-gray-100">
             <td class="py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
               <p class="text-default-800">{{ item.CodProducto }}</p>
             </td>
             <td class="py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
               <p
                 class="text-default-800 cursor-pointer text-blue-500"
-                @click="() => router.push(`/products/${item.id}`)"
+                @click="() => router.push(`/products/${item.CodProducto}`)"
               >
-                {{ item.producto }}
+                {{ item.CodNombre }}
               </p>
             </td>
             <td class="hidden md:table-cell py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
-              <p class="text-default-800">{{ item.modelo }}</p>
+              <p class="text-default-800">{{ item.Modelo }}</p>
             </td>
             <td class="hidden md:table-cell py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
-              <p class="text-default-800">{{ item.fabricante }}</p>
+              <p class="text-default-800">{{ item.Fabricante }}</p>
             </td>
             <td class="py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
-              <span class="text-default-400 text-sm">{{ item.description }}</span>
+              <span class="text-default-400 text-sm">{{ item.Descripcion }}</span>
             </td>
             <td class="py-4 pl-4 pr-3 text-sm font-medium sm:pl-6 sm:table-cell hidden">
               <div class="relative flex align-middle items-center gap-2">
                 <h3
-                  @click="() => router.push(`/products/${item.id}`)"
+                  @click="() => router.push(`/products/${item.CodProducto}`)"
                   class="cursor-pointer text-blue-500"
                 >
                   Ver Detalle
@@ -50,7 +55,7 @@
         </tbody>
       </table>
     </div>
-    <div class="flex items-center justify-center mt-4">
+    <div v-if="items && items.length > 0" class="flex items-center justify-center mt-4">
       <button
         class="px-4 py-2 border rounded"
         :class="{ hidden: page === 1 }"
@@ -73,19 +78,22 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useProductStore } from '@/store/useProductStore';
 import { columns } from './data.js';
-import { productsData } from './MOCK_DATA.js';
+import type { Producto } from '@/interfaces/products.interface.js';
 
 const router = useRouter();
+const productStore = useProductStore();
+
 const filterValue = ref('');
 const rowsPerPage = ref(3);
 const page = ref(1);
 
-const pages = computed(() => Math.ceil(productsData.length / rowsPerPage.value));
+const pages = computed(() => Math.ceil(productStore.products.length / rowsPerPage.value));
 const hasSearchFilter = computed(() => Boolean(filterValue.value));
 
 const filteredItems = computed(() => {
-  let filteredProducts = [...productsData];
+  let filteredProducts = [...productStore.products];
 
   if (hasSearchFilter.value) {
     filteredProducts = filteredProducts.filter((product) =>
@@ -96,7 +104,7 @@ const filteredItems = computed(() => {
   return filteredProducts;
 });
 
-const items = ref([]);
+const items = ref<Producto[]>();
 
 const updateItems = () => {
   const start = (page.value - 1) * rowsPerPage.value;
