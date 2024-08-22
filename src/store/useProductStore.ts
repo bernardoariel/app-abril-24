@@ -21,11 +21,11 @@ export const useProductStore = defineStore('product', () => {
             }
             const data = await response.json();
             products.value = Array.isArray(data) ? data : [data];
-            router.push('/home');
         } catch (err) {
             isError.value = true;
-            error.value = err as Error;
+            error.value = err instanceof Error ? err : new Error('Unknown error');
         } finally {
+            router.push('/home');
             isLoading.value = false;
         }
     };
