@@ -21,7 +21,6 @@ export const useProductStore = defineStore('product', () => {
             }
             const data = await response.json();
             products.value = Array.isArray(data) ? data : [data];
-            console.log(data)
             router.push('/home');
         } catch (err) {
             isError.value = true;
