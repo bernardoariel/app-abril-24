@@ -7,7 +7,6 @@
         class="input input-bordered w-full mb-4"
         v-model="productToSearch"
       />
-      {{ productToSearch }}
       <button @click="() => fetchProduct(productToSearch)" class="btn btn-primary w-full">Buscar</button>
     </div>
   </div>
