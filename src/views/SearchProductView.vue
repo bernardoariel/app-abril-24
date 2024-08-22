@@ -5,17 +5,19 @@
         type="text"
         placeholder="Ingrese un producto a buscar"
         class="input input-bordered w-full mb-4"
-        v-model="product"
+        v-model="productToSearch"
       />
-      <button @click="searchProduct" class="btn btn-primary w-full">Buscar</button>
+      {{ productToSearch }}
+      <button @click="() => fetchProduct(productToSearch)" class="btn btn-primary w-full">Buscar</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useProductStore } from '@/store/useProductStore';
-
+import { ref } from 'vue';
+const productToSearch = ref('')
 const productStore = useProductStore();
+const { fetchProduct } = productStore;
 
-const { product, searchProduct } = productStore;
 </script>

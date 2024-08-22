@@ -1,45 +1,42 @@
 import { defineStore } from 'pinia';
-import { ref, watch } from 'vue';
-import { useQuery } from '@tanstack/vue-query';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export const useProductStore = defineStore('product', () => {
-    const product = ref('');
     const products = ref<any[]>([]);
+    const isLoading = ref(false);
+    const isError = ref(false);
+    const error = ref<Error | null>(null);
     const router = useRouter();
 
-    const fetchProduct = async () => {
-        const response = await fetch(`https://api.example.com/products?search=${product.value}`);
-        if (!response.ok) {
-            throw new Error('Error al obtener los productos');
+    const fetchProduct = async (product:string) => {
+        isLoading.value = true;
+        isError.value = false;
+        error.value = null;
+
+        try {
+            const response = await fetch(`http://localhost:3000/productos/${product}`);
+            if (!response.ok) {
+                throw new Error('Error al obtener los productos');
+            }
+            const data = await response.json();
+            products.value = Array.isArray(data) ? data : [data];
+            console.log(data)
+            router.push('/home');
+        } catch (err) {
+            isError.value = true;
+            error.value = err as Error;
+        } finally {
+            isLoading.value = false;
         }
-        return response.json();
     };
 
-    const { isLoading, isError, error, data, refetch } = useQuery({
-        queryKey: ['products', product],
-        queryFn: fetchProduct,
-        enabled: false,
-    });
-
-    // Watch para redirigir cuando los datos sean obtenidos
-    watch(data, (newData) => {
-        if (newData) {
-            products.value = newData;
-            router.push('/home'); 
-        }
-    });
-
-    const searchProduct = () => {
-        refetch();
-    };
 
     return {
-        product,
         products,
         isLoading,
         isError,
         error,
-        searchProduct,
+        fetchProduct,
     };
 });
