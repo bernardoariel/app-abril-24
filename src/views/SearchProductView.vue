@@ -7,7 +7,7 @@
         class="input input-bordered w-full mb-4"
         v-model="productToSearch"
       />
-      <button @click="() => fetchProduct(productToSearch)" class="btn btn-primary w-full">Buscar</button>
+      <button @click="() => fetchProducts(productToSearch)" class="btn btn-primary w-full">Buscar</button>
     </div>
   </div>
 </template>
@@ -17,6 +17,6 @@ import { useProductStore } from '@/store/useProductStore';
 import { ref } from 'vue';
 const productToSearch = ref('')
 const productStore = useProductStore();
-const { fetchProduct } = productStore;
+const { fetchProducts } = productStore;
 
 </script>

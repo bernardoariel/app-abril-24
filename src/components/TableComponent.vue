@@ -29,7 +29,7 @@
                 class="text-default-800 cursor-pointer text-blue-500"
                 @click="() => router.push(`/products/${item.CodProducto}`)"
               >
-                {{ item.CodNombre }}
+                {{ item.Producto }}
               </p>
             </td>
             <td class="hidden md:table-cell py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">

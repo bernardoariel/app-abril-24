@@ -1,15 +1,17 @@
+import type { Producto } from '@/interfaces/products.interface';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export const useProductStore = defineStore('product', () => {
     const products = ref<any[]>([]);
+    const details = ref<Producto>()
     const isLoading = ref(false);
     const isError = ref(false);
     const error = ref<Error | null>(null);
     const router = useRouter();
 
-    const fetchProduct = async (product:string) => {
+    const fetchProducts = async (product:string) => {
         isLoading.value = true;
         isError.value = false;
         error.value = null;
@@ -30,12 +32,22 @@ export const useProductStore = defineStore('product', () => {
         }
     };
 
+    const productDetails = async (productID: string):Promise<Producto> => {
+            const response = await fetch(`http://localhost:3000/productos/${productID}`);
+            if (!response.ok) {
+                throw new Error('Error al obtener el producto');
+            }
+            return await response.json();
+    }
+
 
     return {
         products,
         isLoading,
         isError,
         error,
-        fetchProduct,
+        fetchProducts,
+        productDetails,
+        details
     };
 });
