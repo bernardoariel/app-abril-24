@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center p-4 bg-gray-200">
+  <div class="flex items-center p-4 bg-gray-200 h-16">
     <button v-if="showBackButton" @click="goBack" class="btn btn-primary mr-4">Volver</button>
     <h1 class="text-xl font-bold">{{ title }}</h1>
   </div>
@@ -36,6 +36,3 @@ const goBack = () => {
 };
 </script>
 
-<style scoped>
-/* Estilos adicionales si es necesario */
-</style>

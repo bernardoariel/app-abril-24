@@ -5,7 +5,7 @@ import StaticIcon from './icons/StaticIcon.vue';
 </script>
 
 <template>
-  <footer class="btm-nav">
+  <footer class="btm-nav h-16">
       <router-link to="/home">
         <button>
           <HomeIcon />
@@ -24,6 +24,3 @@ import StaticIcon from './icons/StaticIcon.vue';
   </footer>
 </template>
 
-<style scoped>
-/* Puedes agregar estilos adicionales aquí si es necesario */
-</style>
