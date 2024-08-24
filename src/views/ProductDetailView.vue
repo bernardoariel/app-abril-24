@@ -4,10 +4,9 @@
     <div v-if="product" class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
       <div class="md:flex">
         <div class="md:flex-shrink-0 flex items-center justify-center">
-          <!-- Imagen del producto o imagen por defecto -->
           <img
-            class="h-48 object-cover md:h-full md:w-48 w-full"
-            src="@/assets/img/phone-screen-with-abstract-marble-aesthetic.jpg"
+            class="h-48 object-contain md:h-full md:w-48 w-full"
+            :src="product.Imagen || imgNotFound"
             alt="Product image"
           />
         </div>
@@ -16,7 +15,7 @@
           <p class="mt-2 text-gray-600">{{ product.Descripcion }}</p>
           <div class="mt-4">
             <span class="text-gray-600 font-semibold">Precio: </span>
-            <span class="text-gray-900">${{ product.Costo2 }}</span>
+            <span class="text-gray-900">${{ product.Precio }}</span>
           </div>
           <div class="mt-2">
             <span class="text-gray-600 font-semibold">Stock: </span>
@@ -25,6 +24,14 @@
             >
               {{ +product.Stock! > 0 ? `${product.Stock} disponibles` : 'Agotado' }}
             </span>
+          </div>
+          <div v-if="product.Sucursales && product.Sucursales.length">
+            <span class="text-gray-600 font-semibold">Sucursales:</span>
+            <ul>
+              <li v-for= "(sucursal, index) in product.Sucursales" :key="index" >
+                {{ sucursales.find((s) => s.CodSucursal === sucursal.CodSucursal).NombreSuc}} : {{ sucursal.Cantidad }}
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -36,23 +43,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useProductStore } from '@/store/useProductStore';
-import type { Producto } from '@/interfaces/products.interface';
-
-// Ruta a la imagen por defecto
+import { useProduct } from '@/composables/useProducts';
+import { useSucursalesStore } from '@/store/useSucursalesStore';
+import imgNotFound from '@/assets/img/notFound.webp'
 
 const route = useRoute();
-const { productDetails } = useProductStore();
-const product = ref<Producto | null>(null);
+const {sucursales} = useSucursalesStore()
+const {product, fetchProductDetails} = useProduct()
 
-onMounted(async () => {
+onMounted(() => {
   const productId = route.params.id as string;
-  product.value = await productDetails(productId);
+ fetchProductDetails(productId)
 });
 </script>
-
-<style scoped>
-/* Puedes añadir estilos adicionales si es necesario */
-</style>

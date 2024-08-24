@@ -1,22 +1,20 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-screen bg-gray-100">
-    <div class="w-full max-w-xs">
+  <div class="w-full h-full">
+    <div class="flex flex-col h-full justify-start items-center pt-40">
       <input
-        type="text"
-        placeholder="Ingrese un producto a buscar"
-        class="input input-bordered w-full mb-4"
-        v-model="productToSearch"
+      type="text"
+      placeholder="Ingrese un producto a buscar"
+      class="input input-bordered w-1/2 mb-4"
+      v-model="productToSearch"
+      @keyup.enter="triggerSearch"
       />
-      <button @click="() => fetchProducts(productToSearch)" class="btn btn-primary w-full">Buscar</button>
+      <button @click="triggerSearch" class="btn btn-primary w-1/2">Buscar</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useProductStore } from '@/store/useProductStore';
-import { ref } from 'vue';
-const productToSearch = ref('')
-const productStore = useProductStore();
-const { fetchProducts } = productStore;
+import { useProduct } from '@/composables/useProducts';
+const {productToSearch, triggerSearch} = useProduct();
 
 </script>
