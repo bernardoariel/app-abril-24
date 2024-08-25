@@ -112,4 +112,5 @@ export interface Producto {
   Fecha_Edit: string | null;
   Fantasia: string | null;
   imagenes: Imagen[]; // Agrega esta línea para incluir la relación de imágenes
+  Precio: string | null;
 }
