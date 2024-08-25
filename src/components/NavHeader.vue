@@ -11,9 +11,7 @@
     </div>
 
     <!-- Div de la derecha (end) -->
-    <div class="flex items-center justify-end w-auto">
-      <!-- Aquí puedes agregar futuros elementos -->
-    </div>
+    <div class="flex items-center justify-end w-auto"></div>
   </div>
 </template>
 
