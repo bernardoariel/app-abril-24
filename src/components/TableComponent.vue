@@ -36,7 +36,7 @@
               <p class="text-default-800">{{ item.Medida }}</p>
             </td>
             <td class="hidden md:table-cell py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
-              <p class="text-default-800">{{ branches.find((b) => b.CodMarca === item.CodMarca)?.Marca }}</p>
+              <p class="text-default-800">{{ findMarcasById(item.CodMarca)?.Marca }}</p>
             </td>
             <td class="py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
               <span class="text-default-400 text-sm">{{ item.Descripcion }}</span>
@@ -76,37 +76,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useProductStore } from '@/store/useProductStore';
-import { useBranchStore } from '@/store/useBranchStore';
-import { useSucursalesStore } from '@/store/useSucursalesStore.js';
+import { useProduct } from '@/composables/useProducts';
+import { useMarcas } from '@/modules/sqlserver/marcas/composable/useMarcas';
 import { columns } from './data.js';
 import type { Producto } from '@/interfaces/products.interface.js';
 
 const router = useRouter();
-const productStore = useProductStore();
-const {fetchAllBranches, branches} = useBranchStore();
-const {fetchAllSucursales} = useSucursalesStore()
-
-onMounted(() => {
-  fetchAllSucursales()
-  fetchAllBranches()
-})
+const {products} = useProduct();
+const {findMarcasById} = useMarcas();
 
 const filterValue = ref('');
 const rowsPerPage = ref(3);
 const page = ref(1);
 
-const pages = computed(() => Math.ceil(productStore.products.length / rowsPerPage.value));
+const pages = computed(() => Math.ceil(products.value.length / rowsPerPage.value));
 const hasSearchFilter = computed(() => Boolean(filterValue.value));
 
 const filteredItems = computed(() => {
-  let filteredProducts = [...productStore.products];
+  let filteredProducts = [...products.value];
 
   if (hasSearchFilter.value) {
     filteredProducts = filteredProducts.filter((product) =>
-      product.producto.toLowerCase().includes(filterValue.value.toLowerCase()),
+      product.Producto.toLowerCase() === filterValue.value.toLowerCase(),
     );
   }
 

@@ -22,14 +22,14 @@
             <span
               :class="{ 'text-green-500': +product.Stock! > 0, 'text-red-500': +product.Stock! <= 0 }"
             >
-              {{ +product.Stock! > 0 ? `${product.Stock} disponibles` : 'Agotado' }}
+              {{ product.Stock! > 0 ? `${product.Stock} disponibles` : 'Agotado' }}
             </span>
           </div>
           <div v-if="product.Sucursales && product.Sucursales.length">
             <span class="text-gray-600 font-semibold">Sucursales:</span>
             <ul>
               <li v-for= "(sucursal, index) in product.Sucursales" :key="index" >
-                {{ sucursales.find((s) => s.CodSucursal === sucursal.CodSucursal).NombreSuc}} : {{ sucursal.Cantidad }}
+                {{ findSucursalById(sucursal.CodSucursal).NombreSuc}} : {{ sucursal.Cantidad }}
               </li>
             </ul>
           </div>
@@ -43,18 +43,20 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useProduct } from '@/composables/useProducts';
-import { useSucursalesStore } from '@/store/useSucursalesStore';
+import {useSucursales} from '@/modules/sqlserver/sucursales/composable/useSucursales'
 import imgNotFound from '@/assets/img/notFound.webp'
+import type { Producto } from '@/interfaces/products.interface';
+const product = ref<Producto | undefined>(undefined) 
 
 const route = useRoute();
-const {sucursales} = useSucursalesStore()
-const {product, fetchProductDetails} = useProduct()
+const {findSucursalById} = useSucursales()
+const {findProductById} = useProduct()
 
 onMounted(() => {
   const productId = route.params.id as string;
- fetchProductDetails(productId)
+  product.value = findProductById(productId)
 });
 </script>

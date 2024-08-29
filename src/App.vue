@@ -2,6 +2,15 @@
 import { RouterView } from 'vue-router';
 import NavHeader from './components/NavHeader.vue';
 import FooterComponent from './components/FooterComponent.vue';
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools';
+import {useSucursales} from '@/modules/sqlserver/sucursales/composable/useSucursales'
+import {useMarcas} from '@/modules/sqlserver/marcas/composable/useMarcas'
+
+const {sucursales} = useSucursales()
+const {marcas} = useMarcas()
+console.log('sucursales:::', sucursales.value)
+console.log('marcas:::', marcas.value)
+
 </script>
 
 <template>
@@ -14,6 +23,7 @@ import FooterComponent from './components/FooterComponent.vue';
     </div>
     <FooterComponent />
   </div>
+  <VueQueryDevtools />
 </template>
 
 <style scoped>
