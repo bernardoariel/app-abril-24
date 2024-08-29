@@ -3,7 +3,7 @@ import { useProductStore } from '@/store/useProductStore';
 import type { Producto } from '@/interfaces/products.interface';
 import { abrilApiData } from '@/api/abrilApiData';
 import { storeToRefs } from 'pinia';
-import { useQuery, useQueryClient } from '@tanstack/vue-query';
+import { useQuery } from '@tanstack/vue-query';
 
 const fetchProducts = async (product: string) => {
   const { data } = await abrilApiData.get<Producto[]>(`/productos/${product}`);
@@ -12,12 +12,11 @@ const fetchProducts = async (product: string) => {
 
 export function useProduct() {
   const store = useProductStore();
-  const queryClient = useQueryClient();
   const { products } = storeToRefs(store)
   const productToSearch = ref<string>('')
 
-  const { isLoading, data } = useQuery({
-    queryKey: ['products'],
+  const { isFetching, data } = useQuery({
+    queryKey: ['products', productToSearch.value],
     queryFn: () => fetchProducts(productToSearch.value)
   })
 
@@ -28,14 +27,8 @@ export function useProduct() {
   });
 
   const triggerSearch = async () => {
-    if (productToSearch.value.trim()) {
-      // Ejecuta la consulta manualmente
-      queryClient.invalidateQueries({ 
-        queryKey: ['products', productToSearch.value] 
-      });
-      const resp = await fetchProducts(productToSearch.value)
-      store.setProducts(resp);
-    }
+    const resp = await fetchProducts(productToSearch.value)
+    store.setProducts(resp);
   };
 
   const findProductById = (id: string): Producto | undefined => {
@@ -44,7 +37,7 @@ export function useProduct() {
 
 
   return {
-    isLoading,
+    isFetching,
     productToSearch,
     triggerSearch,
     products,
