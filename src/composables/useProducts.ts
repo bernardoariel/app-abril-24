@@ -6,19 +6,20 @@ import { storeToRefs } from 'pinia';
 import { useQuery } from '@tanstack/vue-query';
 
 const fetchProducts = async (product: string) => {
-  const { data } = await abrilApiData.get<Producto[]>(`/productos/${product}`);
-  return data
+  console.log('product::: ', product);
+  const { data } = await abrilApiData.get<Producto[]>(`/productos`);
+  return data;
 };
 
 export function useProduct() {
   const store = useProductStore();
-  const { products } = storeToRefs(store)
-  const productToSearch = ref<string>('')
+  const { products } = storeToRefs(store);
+  const productToSearch = ref<string>('');
 
   const { isFetching, data } = useQuery({
     queryKey: ['products', productToSearch.value],
-    queryFn: () => fetchProducts(productToSearch.value)
-  })
+    queryFn: () => fetchProducts(productToSearch.value),
+  });
 
   watch(data, (newProducts) => {
     if (newProducts) {
@@ -27,23 +28,22 @@ export function useProduct() {
   });
 
   const triggerSearch = async () => {
-    const resp = await fetchProducts(productToSearch.value)
+    const resp = await fetchProducts(productToSearch.value);
     store.setProducts(resp);
   };
 
   const findProductById = (id: string): Producto | undefined => {
-    if(Array.isArray(products.value)){
+    if (Array.isArray(products.value)) {
       return products.value.find((product) => product.CodProducto === id);
     }
-    return products.value
+    return products.value;
   };
-
 
   return {
     isFetching,
     productToSearch,
     triggerSearch,
     products,
-    findProductById
+    findProductById,
   };
 }

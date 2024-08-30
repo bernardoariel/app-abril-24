@@ -28,13 +28,13 @@ const routes = [
   },
   {
     path: '/',
-    redirect: '/home',
+    redirect: '/search',
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',
-    component: NotFoundView
-  }
+    component: NotFoundView,
+  },
 ];
 
 const router = createRouter({

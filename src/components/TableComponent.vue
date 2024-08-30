@@ -84,8 +84,8 @@ import { columns } from './data.js';
 import type { Producto } from '@/interfaces/products.interface.js';
 
 const router = useRouter();
-const {products} = useProduct();
-const {findMarcasById} = useMarcas();
+const { products } = useProduct();
+const { findMarcasById } = useMarcas();
 
 const filterValue = ref('');
 const rowsPerPage = ref(3);
@@ -98,8 +98,8 @@ const filteredItems = computed(() => {
   let filteredProducts = [...products.value];
 
   if (hasSearchFilter.value) {
-    filteredProducts = filteredProducts.filter((product) =>
-      product.Producto.toLowerCase() === filterValue.value.toLowerCase(),
+    filteredProducts = filteredProducts.filter(
+      (product) => product.Producto.toLowerCase() === filterValue.value.toLowerCase(),
     );
   }
 
