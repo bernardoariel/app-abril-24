@@ -12,12 +12,15 @@
 import { useProduct } from '@/composables/useProducts';
 import { useRouter } from 'vue-router';
 
-const { productToSearch, triggerSearch, isFetching } = useProduct();
+const { productToSearch, triggerSearch } = useProduct();
 const router = useRouter();
-console.log(isFetching.value)
 
 const handleSearch = async() => {
   await triggerSearch()
-  router.push({ name: 'productList' });
+  if(/\d/.test(productToSearch.value)){
+    router.push({ path: `/products/${productToSearch.value}` });
+  }else{
+    router.push({ name: 'productList' });
+  }
 }
 </script>

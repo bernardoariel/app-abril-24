@@ -32,7 +32,10 @@ export function useProduct() {
   };
 
   const findProductById = (id: string): Producto | undefined => {
-    return products.value.find((product) => product.CodProducto === id);
+    if(Array.isArray(products.value)){
+      return products.value.find((product) => product.CodProducto === id);
+    }
+    return products.value
   };
 
 
