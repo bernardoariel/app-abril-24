@@ -25,38 +25,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import type { ProductsResponse } from '../modules/sqlserver/products/interfaces/products.response';
-import { abrilApiData } from '@/api/abrilApiData';
-import { useQuery } from '@tanstack/vue-query';
+import { useProducts } from '@/modules/sqlserver/products/composable/useProducts';
+import { useRouter } from 'vue-router';
 
-const searchTerm = ref('');
-const results = ref<ProductsResponse[]>([]);
+const router = useRouter()
 
-const fetchProducts = async (term: string | number): Promise<ProductsResponse[]> => {
-  if (!term) return [];
-  const { data } = await abrilApiData.get<ProductsResponse[]>(`/productos/${term}`);
-  return data;
-};
-
-const { isLoading, data, refetch } = useQuery({
-  queryKey: ['products', searchTerm],
-  queryFn: () => fetchProducts(searchTerm.value),
-  staleTime: 1000 * 60 * 60, // 1 hora
-  enabled: false, // Evita la ejecución automática de la consulta
-});
-
-watch(data, (newData) => {
-  if (!newData) return;
-  if (newData) {
-    results.value = newData;
-  }
-});
+const {searchTerm, results, refetch, isLoading, } = useProducts()
 
 const handleSearch = () => {
   searchTerm.value = searchTerm.value.trim();
   if (searchTerm.value) {
-    refetch(); // Refresca la consulta con el nuevo término
+    refetch(); 
+    
   }
 };
 </script>

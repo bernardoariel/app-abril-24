@@ -43,20 +43,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { useProduct } from '@/composables/useProducts';
+import { useProducts } from '@/modules/sqlserver/products/composable/useProducts';
 import {useSucursales} from '@/modules/sqlserver/sucursales/composable/useSucursales'
 import imgNotFound from '@/assets/img/notFound.webp'
-import type { Producto } from '@/interfaces/products.interface';
-const product = ref<Producto | undefined>(undefined) 
 
-const route = useRoute();
 const {findSucursalById} = useSucursales()
-const {findProductById} = useProduct()
+const {results: product} = useProducts()
 
-onMounted(() => {
-  const productId = route.params.id as string;
-  product.value = findProductById(productId)
-});
+// onMounted(() => {
+//   const productId = route.params.id as string;
+//   product.value = findProductById(productId)
+// });
 </script>

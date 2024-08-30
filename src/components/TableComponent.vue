@@ -78,13 +78,13 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useProduct } from '@/composables/useProducts';
+import { useProducts } from '@/modules/sqlserver/products/composable/useProducts';
 import { useMarcas } from '@/modules/sqlserver/marcas/composable/useMarcas';
 import { columns } from './data.js';
 import type { Producto } from '@/interfaces/products.interface.js';
 
 const router = useRouter();
-const { products } = useProduct();
+const { results:products } = useProducts();
 const { findMarcasById } = useMarcas();
 
 const filterValue = ref('');
