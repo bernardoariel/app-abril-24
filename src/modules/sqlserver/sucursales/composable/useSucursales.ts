@@ -21,7 +21,6 @@ export const useSucursales = () => {
   });
 
   watch(data, (newSucursales) => {
-    console.log('data::: ', data);
     if (newSucursales) store.setSucursales(newSucursales);
   });
 

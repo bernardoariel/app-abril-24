@@ -8,7 +8,6 @@ export const useSucursalesStore = defineStore('useSucursalesStore', () => {
 
   // Define la acción como una función anónima dentro del objeto de retorno
   const setSucursales = (newSucursales: Sucursal[]) => {
-    console.log('Actualizando sucursales en el store:', newSucursales);
     sucursales.value = newSucursales;
   };
 

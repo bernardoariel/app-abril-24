@@ -12,12 +12,10 @@
         <p>{{ findMarcasById(producto.CodMarca)?.Marca }}</p>
       </div>
 
-      <!--   <div class="card-actions justify-start"> -->
       <h2 class="text-center font-semibold bg-orange-500 text-white">
         {{ producto.Stock }} {{ producto.Stock === 1 ? ' Unidad' : 'Unidades' }}
       </h2>
       <small class="text-blue-950 text-center small-text font-semibold">{{ sucursalesInfo }}</small>
-      <!-- </div> -->
       <div class="card-actions justify-center">
         <h2 class="text-2xl mt-4 font-bold text-blue-950">$ {{ producto.Precio }}.-</h2>
       </div>

@@ -32,6 +32,6 @@ const showBackButton = computed(() => {
 });
 
 const goBack = () => {
-  router.go(-1);
+  router.replace({ name: 'searchProduct' });
 };
 </script>

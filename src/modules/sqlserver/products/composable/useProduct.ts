@@ -6,6 +6,7 @@ interface Options {
 }
 
 export const useProduct = ({ id }: Options) => {
+  console.log('id::: ', id);
   const {
     isLoading,
     isError,
@@ -18,6 +19,7 @@ export const useProduct = ({ id }: Options) => {
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60,
     cacheTime: 1000 * 30,
+    retry: false,
   });
   return {
     error,

@@ -14,16 +14,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useProductPrefetch } from '../modules/sqlserver/products/composable/useProductPrefetch';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const searchTerm = ref('');
-const { prefetch } = useProductPrefetch(); // Iniciar el hook dentro de setup
 
 const handleSearch = async () => {
   if (!searchTerm.value) return;
 
-  await prefetch(searchTerm.value); // Usar el método prefetch
-
-  // Aquí podrías redirigir a la otra página usando router.push('/otra-pagina')
+  router.replace(`/product/${searchTerm.value}`);
 };
 </script>

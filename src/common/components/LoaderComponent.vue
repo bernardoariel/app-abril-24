@@ -5,6 +5,7 @@
     viewBox="0 0 44 44"
     xmlns="http://www.w3.org/2000/svg"
     :stroke="color"
+    class="block mx-auto"
   >
     <g fill="none" fill-rule="evenodd" stroke-width="2">
       <circle cx="22" cy="22" r="1">
@@ -60,4 +61,6 @@ import { type AttrLoader } from '../interfaces/loder.interface';
 const { color, size } = defineProps<AttrLoader>();
 </script>
 
-<style scoped></style>
+<style scoped>
+/* Agrega aquí cualquier estilo adicional si es necesario */
+</style>

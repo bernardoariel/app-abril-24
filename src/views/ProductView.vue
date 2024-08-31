@@ -1,8 +1,11 @@
 <template>
   <div class="container mx-auto p-2">
     <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-      <ProductCard v-if="!isLoading" v-bind="producto" />
-      <LoaderComponent v-if="isLoading" v-bind="ConfigLoader" />
+      <div v-if="isLoading && !isError" class="flex justify-center items-center p-10">
+        <LoaderComponent v-bind="ConfigLoader" />
+      </div>
+      <ErrorComponent v-if="isError && !isLoading" />
+      <ProductCard v-else-if="!isLoading && !isError && producto" v-bind="producto" />
     </div>
   </div>
 </template>
@@ -12,6 +15,7 @@ import { useRoute } from 'vue-router';
 import ProductCard from '@/modules/sqlserver/products/components/ProductCard.vue';
 import { useProduct } from '@/modules/sqlserver/products/composable/useProduct';
 import LoaderComponent from '@/common/components/LoaderComponent.vue';
+import ErrorComponent from './ErrorComponent.vue';
 
 const { params } = useRoute();
 
@@ -25,5 +29,6 @@ const ConfigLoader: AttrLoader = {
 };
 
 const sizeLoading: number = 50;
-const { producto, isLoading } = useProduct({ id: +params.id });
+const { producto, isLoading, isError } = useProduct({ id: +params.id });
+console.log('isLoading:', isLoading);
 </script>

@@ -12,10 +12,20 @@ interface GetProductsOptions {
   const { data } = await productsApi.get<Product[]>(`/productos?${filterUrl}`);
   return data;
 }; */
-
+export const sleep = (seconds: number): Promise<boolean> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, seconds * 1000);
+  });
+};
 export const getProductById = async (id: number): Promise<Product> => {
+  await sleep(2);
   try {
     const { data } = await abrilApiData.get<Product>(`/productos/${id}`);
+    if (!data) {
+      throw new Error('Producto no encontrado');
+    }
     return data;
   } catch (error) {
     console.error('Error fetching product by id: ', error);
