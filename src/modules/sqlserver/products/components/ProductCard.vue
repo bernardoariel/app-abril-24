@@ -1,45 +1,47 @@
 <template>
-  <div class="md:flex-shrink-0 flex items-center justify-center">
-    <img
-      class="h-48 object-contain md:h-full md:w-48 w-full"
-      :src="producto.Imagen || ''"
-      alt="Product image"
-    />
-  </div>
-  <div class="p-8">
-    <h2 class="text-2xl font-bold text-gray-900">{{ producto.Producto }}</h2>
-    <p class="mt-2 text-gray-600">{{ producto.Medida }}</p>
-    <p class="mt-2 text-gray-600">{{ producto.Descripcion }}</p>
-    <div class="mt-4">
-      <span class="text-gray-600 font-semibold">Precio: </span>
-      <span class="text-gray-900">${{ producto.Precio }}</span>
-    </div>
-    <div class="mt-2">
-      <span class="text-gray-600 font-semibold">Stock: </span>
-      <span
-        :class="{ 'text-green-500': +producto.Stock! > 0, 'text-red-500': +producto.Stock! <= 0 }"
-      >
-        {{ producto.Stock! > 0 ? `${producto.Stock} disponibles` : 'Agotado' }}
-      </span>
-    </div>
-    <div v-if="producto.Sucursales && producto.Sucursales.length">
-      <span class="text-gray-600 font-semibold">Sucursales:</span>
-      <ul>
-        <!-- <li v-for="(sucursal, index) in producto.Sucursales" :key="index">
-              {{ findSucursalById(sucursal.CodSucursal).NombreSuc }} : {{ sucursal.Cantidad }}
-        </li>  -->
-      </ul>
-    </div>
-    <div v-else class="text-center">
-      <p class="text-gray-600">Producto no encontrado.</p>
+  <div class="card lg:card-side bg-base-100 shadow-xl">
+    <h1 class="text-center text-2xl mt-4 font-bold text-blue-950">{{ producto.CodProducto }}</h1>
+    <figure>
+      <img :src="producto.Imagen || ''" />
+    </figure>
+    <div class="card-body">
+      <h2 class="card-title text-center">{{ producto.Producto }}</h2>
+      <p class="text-center">{{ producto.Descripcion }}</p>
+      <div class="card-actions justify-start text-center">
+        <p>{{ producto.Medida }}</p>
+        <p>{{ findMarcasById(producto.CodMarca)?.Marca }}</p>
+      </div>
+
+      <!--   <div class="card-actions justify-start"> -->
+      <h2 class="text-center font-semibold bg-orange-500 text-white">
+        {{ producto.Stock }} {{ producto.Stock === 1 ? ' Unidad' : 'Unidades' }}
+      </h2>
+      <small class="text-blue-950 text-center small-text font-semibold">{{ sucursalesInfo }}</small>
+      <!-- </div> -->
+      <div class="card-actions justify-center">
+        <h2 class="text-2xl mt-4 font-bold text-blue-950">$ {{ producto.Precio }}.-</h2>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { ProductsResponse } from '../interfaces/products.response';
+import { useSucursales } from '../../sucursales/composable/useSucursales';
+import { useMarcas } from '../../marcas/composable/useMarcas';
 
+const { findSucursalById } = useSucursales();
+const { findMarcasById } = useMarcas();
 const producto = defineProps<ProductsResponse>();
+
+const sucursalesInfo = producto.Sucursales.map((sucursal) => {
+  const nombreSuc = findSucursalById(sucursal.CodSucursal)?.NombreSuc || 'Sucursal desconocida';
+  return `${nombreSuc} (${sucursal.Cantidad})`;
+}).join(', ');
 </script>
 
-<style scoped></style>
+<style scoped>
+.small-text {
+  font-size: 0.6rem;
+}
+</style>

@@ -2,9 +2,15 @@ import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Sucursal } from '../interfaces/sucursal.interface';
 
-export const useuseSucursalesStore = defineStore('useSucursalesStore', () => {
+export const useSucursalesStore = defineStore('useSucursalesStore', () => {
   const sucursales = ref<Sucursal[]>([]);
   const totalSucursales = computed(() => sucursales.value.length);
+
+  // Define la acción como una función anónima dentro del objeto de retorno
+  const setSucursales = (newSucursales: Sucursal[]) => {
+    console.log('Actualizando sucursales en el store:', newSucursales);
+    sucursales.value = newSucursales;
+  };
 
   return {
     //* Props
@@ -14,8 +20,6 @@ export const useuseSucursalesStore = defineStore('useSucursalesStore', () => {
     totalSucursales,
 
     //* Actions
-    setSucursales(newSucursales: Sucursal[]) {
-      sucursales.value = newSucursales;
-    },
+    setSucursales,
   };
 });

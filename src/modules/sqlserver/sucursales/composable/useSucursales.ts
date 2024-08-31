@@ -1,17 +1,15 @@
-import { abrilApiData } from '@/api/abrilApiData';
 import { useQuery } from '@tanstack/vue-query';
-import { useuseSucursalesStore } from '../store/useSucursalesStore';
-import { storeToRefs } from 'pinia';
 import { watch } from 'vue';
-import type { SucursalResponse } from '../interfaces/sucursal.interface';
-
+import { storeToRefs } from 'pinia';
+import { useSucursalesStore } from '../store/useSucursalesStore';
+import { type SucursalResponse } from '../interfaces/sucursal.interface';
+import { abrilApiData } from '@/api/abrilApiData';
 const getSucursales = async (): Promise<SucursalResponse[]> => {
   const { data } = await abrilApiData.get<SucursalResponse[]>('/prod-sucursal');
   return data;
 };
-
 export const useSucursales = () => {
-  const store = useuseSucursalesStore();
+  const store = useSucursalesStore();
 
   const { sucursales } = storeToRefs(store); // []
 
@@ -23,6 +21,7 @@ export const useSucursales = () => {
   });
 
   watch(data, (newSucursales) => {
+    console.log('data::: ', data);
     if (newSucursales) store.setSucursales(newSucursales);
   });
 

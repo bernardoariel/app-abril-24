@@ -1,10 +1,8 @@
 <template>
-  <div class="container mx-auto py-8">
+  <div class="container mx-auto p-2">
     <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-      <div class="md:flex">
-        <ProductCard v-if="!isLoading" v-bind="producto" />
-        <LoaderComponent v-if="isLoading" v-bind="ConfigLoader" />
-      </div>
+      <ProductCard v-if="!isLoading" v-bind="producto" />
+      <LoaderComponent v-if="isLoading" v-bind="ConfigLoader" />
     </div>
   </div>
 </template>
@@ -27,5 +25,5 @@ const ConfigLoader: AttrLoader = {
 };
 
 const sizeLoading: number = 50;
-const { producto, isFetching, isLoading } = useProduct({ id: +params.id });
+const { producto, isLoading } = useProduct({ id: +params.id });
 </script>
