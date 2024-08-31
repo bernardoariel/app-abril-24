@@ -14,7 +14,7 @@ const sizeIcon: string = '30';
         <IconWrapper :icon="HomeIcon" :size="sizeIcon" />
       </button>
     </router-link>
-    <router-link to="/search">
+    <router-link to="/product/201001">
       <button class="disabled" tabindex="-1" aria-disabled="true">
         <IconWrapper :icon="SearchIcon" :size="sizeIcon" />
       </button>
