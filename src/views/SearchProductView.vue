@@ -2,15 +2,15 @@
   <div class="w-full h-full">
     <!-- Cambié de w-28 a w-full -->
     <div class="flex flex-col h-full justify-start items-center pt-40">
-      <div class="relative w-3/4 max-w-lg">
+      <div class="relative w-3/4 max-w-lg ml-[-10px]">
         <div class="flex items-center">
           <!-- Contenedor del input y loader -->
           <label class="input input-bordered flex items-center gap-2 grow h-12 relative">
             <input
               v-model="searchTerm"
               type="text"
-              placeholder="Ingrese un producto a buscar"
-              class="grow outline-none h-full pr-10"
+              placeholder="Buscar"
+              class="grow outline-none h-full pr-10 ml-[-12px]"
               @input="debouncedFilterOptions"
               @keydown.down.prevent="navigateOptions('down')"
               @keydown.up.prevent="navigateOptions('up')"

@@ -17,7 +17,9 @@
       </h2>
       <small class="text-blue-950 text-center small-text font-semibold">{{ sucursalesInfo }}</small>
       <div class="card-actions justify-center">
-        <h2 class="text-2xl mt-4 font-bold text-blue-950">$ {{ producto.Precio }}.-</h2>
+        <h2 class="text-2xl mt-4 font-bold text-blue-950">
+          {{ formatPrice(producto.Precio) }}
+        </h2>
       </div>
     </div>
   </div>
@@ -27,6 +29,7 @@
 import type { ProductsResponse } from '../interfaces/products.response';
 import { useSucursales } from '../../sucursales/composable/useSucursales';
 import { useMarcas } from '../../marcas/composable/useMarcas';
+import { formatPrice } from '../../../../common/helpers/formatPrice';
 
 const { findSucursalById } = useSucursales();
 const { findMarcasById } = useMarcas();
