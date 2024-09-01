@@ -11,7 +11,7 @@ const { marcas } = useMarcas();
 </script>
 
 <template>
-  <div class="bg-gray-100 min-h-screen flex flex-col">
+  <div class="app-container bg-gray-100 min-h-screen flex flex-col">
     <NavHeader />
     <div class="flex-grow">
       <div class="h-full">
@@ -24,8 +24,19 @@ const { marcas } = useMarcas();
 </template>
 
 <style scoped>
+.app-container {
+  max-width: 100%; /* Asegura que el contenedor no supere el 100% del ancho de la pantalla */
+  overflow-x: hidden; /* Previene el desbordamiento horizontal */
+  padding: 0; /* Evita márgenes innecesarios que puedan causar desbordamiento */
+  margin: 0 auto; /* Centra el contenedor */
+}
+
 .flex-grow {
   width: 100%;
-  height: calc(100vh - 128px);
+  height: calc(100vh - 128px); /* Asegura que la altura se calcule correctamente */
+}
+
+h1 {
+  text-align: center; /* Ejemplo de estilo adicional */
 }
 </style>

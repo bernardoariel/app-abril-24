@@ -38,7 +38,7 @@
             class="text-sm leading-none mt-1 font-semibold"
             :class="index % 2 !== 0 ? 'text-white' : 'text-gray-600'"
           >
-            $ {{ prod.Precio }}.-
+            {{ formatPrice(prod.Precio) }}
           </p>
         </div>
       </div>
@@ -52,6 +52,7 @@
 
 <script setup lang="ts">
 import type { ProductsResponse } from '../interfaces/products.response';
+import { formatPrice } from '../../../../common/helpers/formatPrice';
 
 const props = defineProps<{ productos: ProductsResponse[] }>();
 </script>
