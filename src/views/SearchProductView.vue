@@ -54,7 +54,17 @@
             :class="{ 'bg-gray-200': index === activeIndex }"
             class="px-4 py-2 cursor-pointer hover:bg-gray-200"
           >
-            {{ option.Producto }} - ({{ option.CodProducto }}) -
+            <span>
+              <!-- Divide el texto en partes resaltadas y no resaltadas -->
+              <span
+                v-for="(part, idx) in splitText(option.Producto)"
+                :key="idx"
+                :class="{ highlight: isHighlighted(part) }"
+              >
+                {{ part }}
+              </span>
+            </span>
+            - ({{ option.CodProducto }}) -
             <span class="font-semibold">{{ formatPrice(option.Precio) }} </span>
           </li>
         </ul>
@@ -87,6 +97,17 @@ const fetchProducts = async (term: string) => {
   } finally {
     isLoading.value = false;
   }
+};
+const splitText = (text: string) => {
+  const searchTermValue = searchTerm.value.trim();
+  if (!searchTermValue) return [text];
+
+  const regex = new RegExp(`(${searchTermValue})`, 'gi');
+  return text.split(regex);
+};
+
+const isHighlighted = (part: string) => {
+  return part.toLowerCase() === searchTerm.value.trim().toLowerCase();
 };
 
 const debouncedFilterOptions = () => {
@@ -139,3 +160,12 @@ const handleSearch = async () => {
   }
 };
 </script>
+<style scoped>
+.highlight {
+  background-color: #ffff00; /* Un amarillo claro para resaltar */
+  color: #000; /* Cambia el color del texto a negro */
+  font-weight: bold; /* Mantén el texto en negrita */
+  padding: 0 2px; /* Un pequeño relleno alrededor del texto resaltado */
+  border-radius: 3px; /* Bordes ligeramente redondeados */
+}
+</style>
