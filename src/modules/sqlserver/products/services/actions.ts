@@ -1,17 +1,13 @@
 import { type Producto } from '../../../../interfaces/products.interface';
 import { abrilApiData } from '@/api/abrilApiData';
-
 interface GetProductsOptions {
-  filterKey?: string;
+  term: string;
 }
-/* export const getProducts = async ({ filterKey }: GetProductsOptions): Promise<Producto[]> => {
-  // await sleep(2);
-
-  const filterUrl = filterKey ? `category=${filterKey}` : '';
-
-  const { data } = await productsApi.get<Product[]>(`/productos?${filterUrl}`);
+export const getProducts = async ({ term }: string): Promise<Producto[]> => {
+  const { data } = await abrilApiData.get<Producto[]>(`productos/${term}`);
   return data;
-}; */
+};
+
 export const sleep = (seconds: number): Promise<boolean> => {
   return new Promise((resolve) => {
     setTimeout(() => {

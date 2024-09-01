@@ -13,9 +13,9 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import ProductCard from '@/modules/sqlserver/products/components/ProductCard.vue';
-import { useProduct } from '@/modules/sqlserver/products/composable/useProduct';
 import LoaderComponent from '@/common/components/LoaderComponent.vue';
 import ErrorComponent from './ErrorComponent.vue';
+import { useProduct } from '@/modules/sqlserver/products/composable/useProduct';
 
 const { params } = useRoute();
 
@@ -28,7 +28,5 @@ const ConfigLoader: AttrLoader = {
   color: '#000',
 };
 
-const sizeLoading: number = 50;
 const { producto, isLoading, isError } = useProduct({ id: +params.id });
-console.log('isLoading:', isLoading);
 </script>

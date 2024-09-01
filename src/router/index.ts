@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '@/views/LoginView.vue';
-import ProductListView from '@/views/ProductListView.vue';
+import ProductsView from '@/views/ProductsView.vue';
 
 import SearchProductView from '@/views/SearchProductView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/home',
     name: 'productList',
-    component: ProductListView,
+    component: ProductsView,
   },
   {
     path: '/product/:id',

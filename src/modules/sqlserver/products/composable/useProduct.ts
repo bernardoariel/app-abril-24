@@ -6,7 +6,6 @@ interface Options {
 }
 
 export const useProduct = ({ id }: Options) => {
-  console.log('id::: ', id);
   const {
     isLoading,
     isError,
@@ -26,6 +25,6 @@ export const useProduct = ({ id }: Options) => {
     isError,
     isFetching,
     isLoading,
-    producto,
+    producto: producto ?? [],
   };
 };

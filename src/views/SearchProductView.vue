@@ -1,13 +1,16 @@
 <template>
   <div class="w-full h-full">
     <div class="flex flex-col h-full justify-start items-center pt-40">
-      <input
-        v-model="searchTerm"
-        type="text"
-        placeholder="Ingrese un producto a buscar"
-        class="input input-bordered w-1/2 mb-4"
-      />
-      <button @click="handleSearch" class="btn btn-primary w-1/2">Buscar</button>
+      <div class="flex items-center w-3/4 max-w-lg">
+        <!-- Ajustado a 3/4 del ancho con un máximo de 32rem -->
+        <input
+          v-model="searchTerm"
+          type="text"
+          placeholder="Ingrese un producto a buscar"
+          class="input input-bordered flex-grow"
+        />
+        <button @click="handleSearch" class="btn btn-primary ml-2">Buscar</button>
+      </div>
     </div>
   </div>
 </template>
@@ -21,8 +24,16 @@ const router = useRouter();
 const searchTerm = ref('');
 
 const handleSearch = async () => {
-  if (!searchTerm.value) return;
+  const term = searchTerm.value.trim();
+  if (!term) return;
+  const isNumber = !isNaN(Number(term));
 
-  router.replace(`/product/${searchTerm.value}`);
+  if (isNumber) {
+    // Redirige a la ruta del producto por ID
+    router.replace(`/product/${term}`);
+  } else {
+    // Redirige a la ruta de la lista de productos
+    router.replace({ name: 'productList', query: { search: term } });
+  }
 };
 </script>
