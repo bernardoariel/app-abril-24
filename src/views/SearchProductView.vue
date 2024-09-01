@@ -43,10 +43,13 @@
         </div>
         <!-- Lista de sugerencias -->
         <ul
-          v-if="filteredOptions.length > 0"
+          v-if="searchTerm.length >= 3 && !isLoading"
           class="absolute left-0 w-full bg-white border border-gray-300 mt-1 rounded-md shadow-lg max-h-48 overflow-y-auto z-20"
           style="top: 100%"
         >
+          <li v-if="filteredOptions.length === 0" class="px-4 py-2 text-gray-500">
+            Producto no encontrado
+          </li>
           <li
             v-for="(option, index) in filteredOptions"
             :key="option.CodProducto"
@@ -89,11 +92,19 @@ let debounceTimeout: ReturnType<typeof setTimeout> | undefined;
 const fetchProducts = async (term: string) => {
   try {
     isLoading.value = true;
-    const results = await getProducts({ term });
-    filteredOptions.value = results.slice(0, 5); // Limita a las primeras 5 opciones
+    const encodedTerm = encodeURIComponent(term); // Codifica el término de búsqueda
+    const results = await getProducts({ term: encodedTerm });
+    // Verificamos si la respuesta es un array vacío
+    if (results.length === 0) {
+      filteredOptions.value = [];
+    } else {
+      filteredOptions.value = results.slice(0, 5); // Limita a las primeras 5 opciones
+    }
     activeIndex.value = -1;
   } catch (error) {
     console.error('Error fetching products:', error);
+    // Si hay un error, aseguramos que la lista de opciones esté vacía
+    filteredOptions.value = [];
   } finally {
     isLoading.value = false;
   }
