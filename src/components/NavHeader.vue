@@ -32,6 +32,12 @@ const showBackButton = computed(() => {
 });
 
 const goBack = () => {
-  router.replace({ name: 'searchProduct' });
+  const previousRoute = localStorage.getItem('previousRoute');
+  if (previousRoute) {
+    const { name, query } = JSON.parse(previousRoute);
+    router.replace({ name, query });
+  } else {
+    router.replace({ name: 'searchProduct' }); // fallback a 'searchProduct' si no hay ruta anterior
+  }
 };
 </script>

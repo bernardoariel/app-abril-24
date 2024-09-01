@@ -7,6 +7,7 @@
           <!-- Contenedor del input y loader -->
           <label class="input input-bordered flex items-center gap-2 grow h-12 relative">
             <input
+              ref="searchInput"
               v-model="searchTerm"
               type="text"
               placeholder="Buscar"
@@ -77,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getProducts } from '@/modules/sqlserver/products/services/actions';
 import { formatPrice } from '../common/helpers/formatPrice';
@@ -88,6 +89,10 @@ const filteredOptions = ref([]); // Aquí se guardarán las opciones filtradas
 const activeIndex = ref(-1); // Índice para la navegación
 const isLoading = ref(false); // Indicador de carga
 let debounceTimeout: ReturnType<typeof setTimeout> | undefined;
+const searchInput = ref<HTMLInputElement | null>(null);
+onMounted(() => {
+  searchInput.value?.focus();
+});
 
 const fetchProducts = async (term: string) => {
   try {

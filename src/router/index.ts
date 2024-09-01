@@ -42,5 +42,30 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
+router.beforeEach((to, from, next) => {
+  let query = from.query;
+  let fromName = from.name;
+
+  // Si venimos de `productDetail` y vamos a `productList`, guardamos `searchProduct` como la ruta anterior.
+  if (from.name === 'productDetail' && to.name === 'productList') {
+    fromName = 'searchProduct';
+  }
+
+  // Guardar la ruta anterior solo si estamos en `productDetail` o `productList`.
+  if (
+    from.name === 'productList' ||
+    from.name === 'searchProduct' ||
+    (from.name === 'productDetail' && to.name === 'productList')
+  ) {
+    localStorage.setItem(
+      'previousRoute',
+      JSON.stringify({
+        name: fromName,
+        query: query,
+      }),
+    );
+  }
+  next();
+});
 
 export default router;
