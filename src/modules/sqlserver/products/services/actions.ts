@@ -4,6 +4,7 @@ interface GetProductsOptions {
   term: string;
 }
 export const getProducts = async ({ term }: string): Promise<Producto[]> => {
+  console.log('term::: ', term);
   const { data } = await abrilApiData.get<Producto[]>(`productos/${term}`);
   return data;
 };
