@@ -1,29 +1,27 @@
-<script setup lang="ts">
-import HomeIcon from './icons/HomeIcon.vue';
-import ProductsIcon from './icons/ProductsIcon.vue';
-import SearchIcon from './icons/SearchIcon.vue';
-</script>
-
 <template>
-  <footer class="btm-nav">
+  <footer class="btm-nav h-16">
     <router-link to="/home">
       <button>
-        <HomeIcon />
+        <IconWrapper :icon="HomeIcon" :size="sizeIcon" />
       </button>
     </router-link>
     <router-link to="/search">
       <button class="disabled" tabindex="-1" aria-disabled="true">
-        <SearchIcon />
+        <IconWrapper :icon="SearchIcon" :size="sizeIcon" />
       </button>
     </router-link>
     <router-link to="/home">
       <button>
-        <ProductsIcon />
+        <IconWrapper :icon="ListIcon" :size="sizeIcon" />
       </button>
     </router-link>
   </footer>
 </template>
+<script setup lang="ts">
+import HomeIcon from './icons/HomeIcon.vue';
+import ListIcon from './icons/ListIcon.vue';
+import SearchIcon from './icons/SearchIcon.vue';
+import IconWrapper from './IconWrapper.vue';
 
-<style scoped>
-/* Puedes agregar estilos adicionales aquí si es necesario */
-</style>
+const sizeIcon: string = '30';
+</script>

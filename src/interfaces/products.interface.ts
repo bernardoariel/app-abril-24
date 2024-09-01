@@ -1,27 +1,12 @@
-export interface Imagen {
-  CodProducto: string;
-  SKU: string | null;
-  NImagen: string;
-  TipoImagen: string;
-  Fecha_Alta: string | null;
-  User_Alta: string | null;
-  Fecha_Update: string | null;
-  User_Update: string | null;
-  FileLD: string;
-  Observacion: string;
-  CodColor: string;
-  URL: string;
-  Published: string;
-  Orden: string;
-}
+import type { Sucursales } from "./sucursales.interface";
+
 
 export interface Producto {
-  TipoProducto: string;
   CodProducto: string;
-  CodNombre: string;
   Producto: string;
   Medida: string;
   Descripcion: string;
+<<<<<<< HEAD
   Modelo: string | null;
   CodMarca: string;
   CodRubro: string | null;
@@ -113,4 +98,13 @@ export interface Producto {
   Fantasia: string | null;
   imagenes: Imagen[]; // Agrega esta línea para incluir la relación de imágenes
   Precio: string | null;
+=======
+  Stock: number;
+  CodMarca: number;
+  CodRubro: number;
+  CodCategoria: number;
+  Precio: number;
+  Imagen: string;
+  Sucursales: Sucursales[];
+>>>>>>> buscarProductos
 }

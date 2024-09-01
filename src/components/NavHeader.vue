@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div class="flex items-center justify-between p-4 bg-gray-200">
     <!-- Div de la izquierda (start) -->
     <div class="flex items-center justify-start w-auto">
@@ -12,6 +13,11 @@
 
     <!-- Div de la derecha (end) -->
     <div class="flex items-center justify-end w-auto"></div>
+=======
+  <div class="flex items-center p-4 bg-gray-200 h-16">
+    <button v-if="showBackButton" @click="goBack" class="btn btn-ghost mr-4">Volver</button>
+    <h1 class="text-xl font-bold">{{ title }}</h1>
+>>>>>>> buscarProductos
   </div>
 </template>
 
@@ -42,10 +48,6 @@ const showBackButton = computed(() => {
 });
 
 const goBack = () => {
-  router.go(-1);
+  router.replace({ name: 'searchProduct' });
 };
 </script>
-
-<style scoped>
-/* Estilos adicionales si es necesario */
-</style>

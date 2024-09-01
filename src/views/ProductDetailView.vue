@@ -4,10 +4,9 @@
     <div v-if="product" class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
       <div class="md:flex">
         <div class="md:flex-shrink-0 flex items-center justify-center">
-          <!-- Imagen del producto o imagen por defecto -->
           <img
-            class="h-48 object-cover md:h-full md:w-48 w-full"
-            src="@/assets/img/phone-screen-with-abstract-marble-aesthetic.jpg"
+            class="h-48 object-contain md:h-full md:w-48 w-full"
+            :src="product.Imagen || imgNotFound"
             alt="Product image"
           />
         </div>
@@ -26,8 +25,20 @@
                 'text-red-500': +product.Stock! <= 0,
               }"
             >
+<<<<<<< HEAD
               2, Laguna Blanca, Clorinda
+=======
+              {{ product.Stock! > 0 ? `${product.Stock} disponibles` : 'Agotado' }}
+>>>>>>> buscarProductos
             </span>
+          </div>
+          <div v-if="product.Sucursales && product.Sucursales.length">
+            <span class="text-gray-600 font-semibold">Sucursales:</span>
+            <ul>
+              <li v-for= "(sucursal, index) in product.Sucursales" :key="index" >
+                {{ findSucursalById(sucursal.CodSucursal).NombreSuc}} : {{ sucursal.Cantidad }}
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -41,21 +52,18 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useProductStore } from '@/store/useProductStore';
+import { useProduct } from '@/composables/useProducts';
+import {useSucursales} from '@/modules/sqlserver/sucursales/composable/useSucursales'
+import imgNotFound from '@/assets/img/notFound.webp'
 import type { Producto } from '@/interfaces/products.interface';
-
-// Ruta a la imagen por defecto
+const product = ref<Producto | undefined>(undefined) 
 
 const route = useRoute();
-const { productDetails } = useProductStore();
-const product = ref<Producto | null>(null);
+const {findSucursalById} = useSucursales()
+const {findProductById} = useProduct()
 
-onMounted(async () => {
+onMounted(() => {
   const productId = route.params.id as string;
-  product.value = await productDetails(productId);
+  product.value = findProductById(productId)
 });
 </script>
-
-<style scoped>
-/* Puedes añadir estilos adicionales si es necesario */
-</style>
