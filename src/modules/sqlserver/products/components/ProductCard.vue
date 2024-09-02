@@ -1,18 +1,24 @@
 <template>
-  <div class="card lg:card-side bg-base-100 shadow-xl">
-    <h1 class="text-center text-2xl mt-4 font-bold text-blue-950">{{ producto.CodProducto }}</h1>
-    <figure>
-      <img :src="producto.Imagen || imgDefault" class="product-image" />
+  <div class="card bg-base-100 shadow-xl p-4 lg:flex lg:flex-row lg:items-center">
+    <figure class="lg:w-1/2">
+      <img
+        :src="producto.Imagen || imgDefault"
+        alt="Product Image"
+        class="w-full h-auto max-h-[300px] sm:max-w-[300px] md:max-w-[400px] lg:max-w-[500px] object-contain"
+      />
     </figure>
-    <div class="card-body">
-      <h2 class="card-title text-center">{{ producto.Producto }}</h2>
+    <div class="card-body lg:w-1/2 lg:pl-8">
+      <h1 class="text-center text-2xl font-bold text-blue-950">{{ producto.CodProducto }}</h1>
+      <div class="flex justify-center items-center">
+        <h2 class="card-title">{{ producto.Producto }}</h2>
+      </div>
+
       <p class="text-center">{{ producto.Descripcion }}</p>
       <div class="card-actions justify-start text-center">
         <p>{{ producto.Medida }}</p>
         <p>{{ findMarcasById(producto.CodMarca)?.Marca }}</p>
       </div>
-
-      <h2 class="text-center font-semibold bg-orange-500 text-white">
+      <h2 class="text-center font-semibold bg-orange-500 text-white my-2">
         {{ producto.Stock }} {{ producto.Stock === 1 ? ' Unidad' : 'Unidades' }}
       </h2>
       <small class="text-blue-950 text-center small-text font-semibold">{{ sucursalesInfo }}</small>
