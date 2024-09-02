@@ -1,5 +1,8 @@
 <template>
   <div class="p-3 pb-16">
+    <div v-if="!searchQuery && !isLoading" class="flex justify-center items-center p-10">
+      <p>No has ingresado ninguna búsqueda.</p>
+    </div>
     <ProductList v-if="productos && !isLoading" :productos="productos" />
     <div v-if="isLoading && !isError" class="flex justify-center items-center p-10">
       <LoaderComponent v-bind="ConfigLoader" />

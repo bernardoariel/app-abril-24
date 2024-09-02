@@ -8,6 +8,7 @@ import { useMarcas } from '@/modules/sqlserver/marcas/composable/useMarcas';
 
 const { sucursales } = useSucursales();
 const { marcas } = useMarcas();
+console.log(import.meta.env);
 </script>
 
 <template>

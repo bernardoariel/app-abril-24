@@ -45,7 +45,9 @@
     </div>
 
     <router-link :to="`/product/${prod.CodProducto}`">
-      <button class="absolute bottom-2 right-2 btn btn-secondary px-3 py-1 text-white">Ver</button>
+      <button class="absolute bottom-2 right-2 btn btn-accent px-3 py-1 text-white">
+        Ver {{ prod.CodProducto }}
+      </button>
     </router-link>
   </div>
 </template>

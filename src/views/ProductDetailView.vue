@@ -15,10 +15,11 @@
           <p class="mt-2 text-gray-600">{{ product.Descripcion }}</p>
           <div class="mt-4">
             <span class="text-gray-600 font-semibold">Precio: </span>
-            <span class="text-gray-900">${{ product.Precio }}</span>
+            <span class="text-gray-900">{{ formatPrice(product.Precio) }}</span>
           </div>
           <div class="mt-2">
             <span class="text-gray-600 font-semibold">Stock: </span>
+
             <span
               :class="{
                 'text-green-500': +product.Stock! > 0,
@@ -52,6 +53,7 @@ import { useProduct } from '@/composables/useProducts';
 import { useSucursales } from '@/modules/sqlserver/sucursales/composable/useSucursales';
 import imgNotFound from '@/assets/img/notFound.webp';
 import type { Producto } from '@/interfaces/products.interface';
+import { formatPrice } from '../common/helpers/formatPrice';
 const product = ref<Producto | undefined>(undefined);
 
 const route = useRoute();
