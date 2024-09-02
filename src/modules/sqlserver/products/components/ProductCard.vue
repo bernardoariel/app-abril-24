@@ -1,10 +1,10 @@
 <template>
-  <div class="card bg-base-100 shadow-xl p-4 lg:flex lg:flex-row lg:items-center">
+  <div class="card bg-base-100 shadow-xl p-4 lg:flex lg:flex-row lg:items-center mb-16">
     <figure class="lg:w-1/2">
       <img
         :src="producto.Imagen || imgDefault"
         alt="Product Image"
-        class="w-full h-auto max-h-[300px] sm:max-w-[300px] md:max-w-[400px] lg:max-w-[500px] object-contain"
+        class="w-full h-auto max-h-[200px] sm:max-w-[200px] md:max-w-[250px] lg:max-w-[300px] object-contain"
       />
     </figure>
     <div class="card-body lg:w-1/2 lg:pl-8">
@@ -41,7 +41,6 @@ const { findSucursalById } = useSucursales();
 const { findMarcasById } = useMarcas();
 const producto = defineProps<ProductsResponse>();
 const imgDefault = import.meta.env.VITE_BASE_URL + '/src/assets/img/No_Image_Available.jpg';
-console.log('import.meta.env.VITE_BASE_URL::: ', import.meta.env.VITE_BASE_URL);
 
 const sucursalesInfo = producto.Sucursales.map((sucursal) => {
   const nombreSuc = findSucursalById(sucursal.CodSucursal)?.NombreSuc || 'Sucursal desconocida';

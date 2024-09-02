@@ -16,16 +16,19 @@ const routes = [
     path: '/products',
     name: 'productList',
     component: ProductsView,
+    meta: { title: 'Listado de Productos' },
   },
   {
     path: '/product/:id',
     name: 'productDetail',
     component: ProductView,
+    meta: { title: 'Detalle del Producto' },
   },
   {
     path: '/search',
     name: 'searchProduct',
     component: SearchProductView,
+    meta: { title: 'Buscar Producto' },
   },
   {
     path: '/',
