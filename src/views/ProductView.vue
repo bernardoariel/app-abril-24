@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto p-2">
-    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div class="max-w-4xl mx-auto rounded-lg overflow-hidden">
       <div v-if="isLoading && !isError" class="flex justify-center items-center p-10">
         <LoaderComponent v-bind="ConfigLoader" />
       </div>

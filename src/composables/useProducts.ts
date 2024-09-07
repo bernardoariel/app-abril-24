@@ -6,7 +6,6 @@ import { storeToRefs } from 'pinia';
 import { useQuery } from '@tanstack/vue-query';
 
 const fetchProducts = async (product: string) => {
-  console.log('product::: ', product);
   const { data } = await abrilApiData.get<Producto[]>(`/productos`);
   return data;
 };

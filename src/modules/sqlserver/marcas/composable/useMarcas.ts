@@ -17,7 +17,6 @@ export const useMarcas = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['marcas'],
     queryFn: () => fetchMarcas(),
-    cacheTime: 1000 * 30, // 1 hora
     staleTime: 1000 * 30,
   });
 
@@ -35,6 +34,6 @@ export const useMarcas = () => {
     isLoading,
     marcas,
     fetchMarcas,
-    findMarcasById
+    findMarcasById,
   };
 };

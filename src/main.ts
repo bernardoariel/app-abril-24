@@ -10,12 +10,5 @@ const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
-VueQueryPlugin.install(app, {
-  queryClientOptions: {
-    queries: {
-      cacheTime: 1000 * 120, // 2 minutos
-      refetchOnReconnect: 'always',
-    },
-  },
-});
+app.use(VueQueryPlugin);
 app.mount('#app');

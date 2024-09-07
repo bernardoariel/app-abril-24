@@ -3,7 +3,7 @@ import { abrilApiData } from '@/api/abrilApiData';
 interface GetProductsOptions {
   term: string;
 }
-export const getProducts = async ({ term }: string): Promise<Producto[]> => {
+export const getProducts = async ({ term }: GetProductsOptions): Promise<Producto[]> => {
   console.log('term::: ', term);
   const { data } = await abrilApiData.get<Producto[]>(`productos/${term}`);
   return data;
@@ -16,10 +16,10 @@ export const sleep = (seconds: number): Promise<boolean> => {
     }, seconds * 1000);
   });
 };
-export const getProductById = async (id: number): Promise<Product> => {
+export const getProductById = async (id: number): Promise<Producto> => {
   await sleep(2);
   try {
-    const { data } = await abrilApiData.get<Product>(`/productos/${id}`);
+    const { data } = await abrilApiData.get<Producto>(`/productos/${id}`);
     if (!data) {
       throw new Error('Producto no encontrado');
     }

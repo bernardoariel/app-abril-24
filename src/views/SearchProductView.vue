@@ -1,17 +1,17 @@
 <template>
   <div class="w-full h-full">
-    <!-- Cambié de w-28 a w-full -->
-    <div class="flex flex-col h-full justify-start items-center pt-40">
-      <div class="relative w-3/4 max-w-lg ml-[-10px]">
-        <div class="flex items-center">
+    <div class="flex flex-col h-full justify-start items-center pt-10">
+      <div class="relative w-full max-w-lg px-4">
+        <!-- Ajusté los márgenes y los anchos -->
+        <div class="flex items-center w-full">
           <!-- Contenedor del input y loader -->
-          <label class="input input-bordered flex items-center gap-2 grow h-12 relative">
+          <label class="input input-bordered flex items-center gap-2 grow h-12 relative w-full">
             <input
               ref="searchInput"
               v-model="searchTerm"
               type="text"
               placeholder="Buscar"
-              class="grow outline-none h-full pr-10 ml-[-12px]"
+              class="grow outline-none h-full pr-10 w-full"
               @input="debouncedFilterOptions"
               @keydown.down.prevent="navigateOptions('down')"
               @keydown.up.prevent="navigateOptions('up')"
@@ -42,6 +42,7 @@
           </label>
           <button @click="handleSearch" class="btn btn-primary ml-2 h-12">Buscar</button>
         </div>
+
         <!-- Lista de sugerencias -->
         <ul
           v-if="searchTerm.length >= 3 && !isLoading"
@@ -82,10 +83,11 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getProducts } from '@/modules/sqlserver/products/services/actions';
 import { formatPrice } from '../common/helpers/formatPrice';
+import { type Producto } from '../interfaces/products.interface';
 
 const router = useRouter();
 const searchTerm = ref('');
-const filteredOptions = ref([]); // Aquí se guardarán las opciones filtradas
+const filteredOptions = ref<Producto[]>([]); // Aquí se guardarán las opciones filtradas
 const activeIndex = ref(-1); // Índice para la navegación
 const isLoading = ref(false); // Indicador de carga
 let debounceTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -176,6 +178,7 @@ const handleSearch = async () => {
   }
 };
 </script>
+
 <style scoped>
 .highlight {
   background-color: #ffff00; /* Un amarillo claro para resaltar */

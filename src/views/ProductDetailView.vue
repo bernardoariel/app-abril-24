@@ -33,7 +33,7 @@
             <span class="text-gray-600 font-semibold">Sucursales:</span>
             <ul>
               <li v-for="(sucursal, index) in product.Sucursales" :key="index">
-                {{ findSucursalById(sucursal.CodSucursal).NombreSuc }} : {{ sucursal.Cantidad }}
+                {{ findSucursalById(sucursal.CodSucursal)?.NombreSuc }} : {{ sucursal.Cantidad }}
               </li>
             </ul>
           </div>

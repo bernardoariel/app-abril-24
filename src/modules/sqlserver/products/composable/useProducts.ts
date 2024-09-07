@@ -12,7 +12,6 @@ export const useProducts = ({ term }: Options) => {
     queryFn: () => getProducts({ term }),
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60,
-    cacheTime: 1000 * 30,
     retry: false,
   });
 
