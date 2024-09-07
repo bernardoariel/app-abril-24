@@ -50,7 +50,7 @@
           style="top: 100%"
         >
           <li v-if="filteredOptions.length === 0" class="px-4 py-2 text-gray-500">
-            Producto no encontrado
+            Producto o marca no encontrado
           </li>
           <li
             v-for="(option, index) in filteredOptions"
@@ -60,17 +60,15 @@
             class="px-4 py-2 cursor-pointer hover:bg-gray-200"
           >
             <span>
-              <!-- Divide el texto en partes resaltadas y no resaltadas -->
-              <span
-                v-for="(part, idx) in splitText(option.Producto)"
-                :key="idx"
-                :class="{ highlight: isHighlighted(part) }"
-              >
-                {{ part }}
+              <!-- Mostrar nombre del producto o marca -->
+              <span>
+                {{ option.Producto }}
+              </span>
+              - ({{ option.CodProducto }}) -
+              <span class="font-semibold"
+                >{{ option.Precio! > 0 ? formatPrice(option.Precio!) : '' }}
               </span>
             </span>
-            - ({{ option.CodProducto }}) -
-            <span class="font-semibold">{{ formatPrice(option.Precio) }} </span>
           </li>
         </ul>
       </div>
@@ -84,10 +82,17 @@ import { useRouter } from 'vue-router';
 import { getProducts } from '@/modules/sqlserver/products/services/actions';
 import { formatPrice } from '../common/helpers/formatPrice';
 import { type Producto } from '../interfaces/products.interface';
+import { useMarcas } from '../modules/sqlserver/marcas/composable/useMarcas';
 
+const { findMarcasById, marcas } = useMarcas();
 const router = useRouter();
 const searchTerm = ref('');
-const filteredOptions = ref<Producto[]>([]); // Aquí se guardarán las opciones filtradas
+interface FilteredOption {
+  Producto: string;
+  CodProducto: string;
+  Precio?: number; // El precio puede ser opcional o undefined en caso de marcas
+}
+const filteredOptions = ref<FilteredOption[]>([]); // Aquí se guardarán las opciones filtradas
 const activeIndex = ref(-1); // Índice para la navegación
 const isLoading = ref(false); // Indicador de carga
 let debounceTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -99,18 +104,30 @@ onMounted(() => {
 const fetchProducts = async (term: string) => {
   try {
     isLoading.value = true;
+    filteredOptions.value = []; // Reiniciamos las opciones filtradas
     const encodedTerm = encodeURIComponent(term); // Codifica el término de búsqueda
-    const results = await getProducts({ term: encodedTerm });
-    // Verificamos si la respuesta es un array vacío
-    if (results.length === 0) {
-      filteredOptions.value = [];
+
+    // Busca coincidencias en las marcas primero
+    const marcasFiltradas = marcas.value.filter((marca) =>
+      marca.Marca.toLowerCase().includes(term.toLowerCase()),
+    );
+
+    if (marcasFiltradas.length > 0) {
+      // Si se encuentran marcas coincidentes, las mostramos
+      filteredOptions.value = marcasFiltradas.map((marca) => ({
+        Producto: marca.Marca, // Nombre de la marca como nombre del "producto"
+        CodProducto: `Marca-${marca.CodMarca}`, // Usa el código de la marca
+        Precio: undefined, // Las marcas no tienen precio
+      }));
     } else {
+      // Si no hay coincidencias en las marcas, buscar productos
+      const results = await getProducts({ term: encodedTerm });
       filteredOptions.value = results.slice(0, 5); // Limita a las primeras 5 opciones
     }
+
     activeIndex.value = -1;
   } catch (error) {
     console.error('Error fetching products:', error);
-    // Si hay un error, aseguramos que la lista de opciones esté vacía
     filteredOptions.value = [];
   } finally {
     isLoading.value = false;
