@@ -1,0 +1,9 @@
+version: '3'
+services:
+  vue-app:
+    image: nginx:stable-alpine
+    container_name: vue-app
+    ports:
+      - '80:80'
+    volumes:
+      - ./dist:/usr/share/nginx/html
