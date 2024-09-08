@@ -1,18 +1,23 @@
 import { useQuery } from '@tanstack/vue-query';
-import { getProducts } from '../services/actions';
+import { getProducts, getProductByMarcas } from '../services/actions';
 import type { ProductsResponse } from '../interfaces/products.response';
 
 interface Options {
   term: string;
+  searchByMarcas?: boolean;
 }
 
-export const useProducts = ({ term }: Options) => {
-  const { isLoading, isError, data } = useQuery<ProductsResponse[]>({
-    queryKey: ['producto', term],
-    queryFn: () => getProducts({ term }),
+export const useProducts = ({ term, searchByMarcas = false }: Options) => {
+  console.log('searchByMarcas in useProducts: ', searchByMarcas);
+  const { isLoading, isError, error, data } = useQuery<ProductsResponse[]>({
+    queryKey: ['producto', term, searchByMarcas ? 'marcas' : 'productos'],
+    queryFn: () => (searchByMarcas ? getProductByMarcas({ term }) : getProducts({ term })),
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60,
     retry: false,
+    onError: (err) => {
+      console.error('Error in useProducts:', err);
+    },
   });
 
   // Asegurando que 'productos' siempre sea un array
@@ -22,5 +27,6 @@ export const useProducts = ({ term }: Options) => {
     productos,
     isLoading,
     isError,
+    error,
   };
 };

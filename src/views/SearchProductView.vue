@@ -55,7 +55,7 @@
           <li
             v-for="(option, index) in filteredOptions"
             :key="option.CodProducto"
-            @click="selectOption(option)"
+            @click="selectOption(option, option.CodProducto === 'Marca' ? 'marca' : null)"
             :class="{ 'bg-gray-200': index === activeIndex }"
             class="px-4 py-2 cursor-pointer hover:bg-gray-200"
           >
@@ -81,7 +81,6 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getProducts } from '@/modules/sqlserver/products/services/actions';
 import { formatPrice } from '../common/helpers/formatPrice';
-import { type Producto } from '../interfaces/products.interface';
 import { useMarcas } from '../modules/sqlserver/marcas/composable/useMarcas';
 
 const { findMarcasById, marcas } = useMarcas();
@@ -116,7 +115,7 @@ const fetchProducts = async (term: string) => {
       // Si se encuentran marcas coincidentes, las mostramos
       filteredOptions.value = marcasFiltradas.map((marca) => ({
         Producto: marca.Marca, // Nombre de la marca como nombre del "producto"
-        CodProducto: `Marca-${marca.CodMarca}`, // Usa el código de la marca
+        CodProducto: `Marca`, // Usa el código de la marca
         Precio: undefined, // Las marcas no tienen precio
       }));
     } else {
@@ -176,11 +175,27 @@ const selectActiveOption = () => {
   }
 };
 
-const selectOption = (option: any) => {
+const selectOption = (option: any, tipo?: string | null) => {
+  console.log('seleccionado');
   searchTerm.value = option.Producto;
   filteredOptions.value = [];
   activeIndex.value = -1;
-  router.replace(`/product/${option.CodProducto}`);
+
+  // Si es un producto específico, redirigimos a la página del producto
+  if (!tipo) {
+    console.log('!tipo');
+    router.replace(`/product/${option.CodProducto}`);
+    return;
+  }
+
+  // Si es una marca, redirigimos a la lista de productos filtrados por la marca
+  if (tipo === 'marca') {
+    console.log('marca');
+    router.replace({
+      name: 'productList',
+      query: { search: option.Producto, searchByMarcas: 'true' }, // Usamos el nombre del query y el valor de la marca
+    });
+  }
 };
 
 const handleSearch = async () => {

@@ -7,6 +7,14 @@
     <div v-if="isLoading && !isError" class="flex justify-center items-center p-10">
       <LoaderComponent v-bind="ConfigLoader" />
     </div>
+    <div v-if="isError && !isLoading" class="flex justify-center items-center p-10">
+      <NotMatchComponent
+        :button-text="'Volver'"
+        :title="'Productos no encontrados!'"
+        :redirectUrl="'/'"
+        :message="errorMessage"
+      />
+    </div>
   </div>
 </template>
 
@@ -15,6 +23,7 @@ import { useRoute } from 'vue-router';
 import { useProducts } from '@/modules/sqlserver/products/composable/useProducts';
 import ProductList from '@/modules/sqlserver/products/components/ProductList.vue';
 import LoaderComponent from '@/common/components/LoaderComponent.vue';
+import NotMatchComponent from '@/common/components/NotMatchComponent.vue';
 interface AttrLoader {
   size: number;
   color: string;
@@ -25,5 +34,23 @@ const ConfigLoader: AttrLoader = {
 };
 const { query } = useRoute();
 const searchQuery = (query.search as string) || '';
-const { productos, isLoading, isError } = useProducts({ term: searchQuery });
+const searchByMarcas = query.searchByMarcas === 'true';
+
+// DEBUGGING: Verificar los parámetros de la query
+console.log('searchQuery: ', searchQuery, 'searchByMarcas: ', searchByMarcas);
+const { productos, isLoading, isError, error } = useProducts({ term: searchQuery, searchByMarcas });
+console.log('productos::: ', productos.value);
+console.log('isLoading::: ', isLoading.value);
+console.log('isError::: ', isError.value);
+console.log('error::: ', error.value);
+interface ErrorResponse {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+const errorMessage =
+  (error as ErrorResponse)?.response?.data?.message ||
+  `No se encontraron productos o marcas con el término ${searchQuery}`;
 </script>
