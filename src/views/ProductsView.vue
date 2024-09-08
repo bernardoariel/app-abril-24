@@ -24,14 +24,17 @@ import { useProducts } from '@/modules/sqlserver/products/composable/useProducts
 import ProductList from '@/modules/sqlserver/products/components/ProductList.vue';
 import LoaderComponent from '@/common/components/LoaderComponent.vue';
 import NotMatchComponent from '@/common/components/NotMatchComponent.vue';
+
 interface AttrLoader {
   size: number;
   color: string;
 }
+
 const ConfigLoader: AttrLoader = {
   size: 80,
   color: '#000',
 };
+
 const { query } = useRoute();
 const searchQuery = (query.search as string) || '';
 const searchByMarcas = query.searchByMarcas === 'true';
@@ -45,6 +48,7 @@ interface ErrorResponse {
     };
   };
 }
+
 const errorMessage =
   (error as ErrorResponse)?.response?.data?.message ||
   `No se encontraron productos o marcas con el término ${searchQuery}`;
