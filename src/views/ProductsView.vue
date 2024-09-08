@@ -36,13 +36,8 @@ const { query } = useRoute();
 const searchQuery = (query.search as string) || '';
 const searchByMarcas = query.searchByMarcas === 'true';
 
-// DEBUGGING: Verificar los parámetros de la query
-console.log('searchQuery: ', searchQuery, 'searchByMarcas: ', searchByMarcas);
 const { productos, isLoading, isError, error } = useProducts({ term: searchQuery, searchByMarcas });
-console.log('productos::: ', productos.value);
-console.log('isLoading::: ', isLoading.value);
-console.log('isError::: ', isError.value);
-console.log('error::: ', error.value);
+
 interface ErrorResponse {
   response?: {
     data?: {
