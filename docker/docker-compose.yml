@@ -5,5 +5,9 @@ services:
     container_name: vue-app
     ports:
       - '80:80'
+      - '443:443'
     volumes:
       - ./dist:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./certificates:/etc/nginx/certificates
+    restart: always
