@@ -1,13 +1,25 @@
 import { type Producto } from '../../../../interfaces/products.interface';
 import { abrilApiData } from '@/api/abrilApiData';
+import axios from 'axios';
 
 interface GetProductsOptions {
   term: string;
 }
 
 export const getProducts = async ({ term }: GetProductsOptions): Promise<Producto[]> => {
-  const { data } = await abrilApiData.get<Producto[]>(`productos/${term}`);
-  return data;
+  try {
+    const { data } = await abrilApiData.get<Producto[]>(`productos/${term}`);
+    return data;
+  } catch (error) {
+    // Verifica si es un error de Axios
+    if (axios.isAxiosError(error)) {
+      console.error('Error al obtener productos:', error.response?.data || error.message);
+    } else {
+      console.error('Error inesperado:', error);
+    }
+    // Puedes lanzar el error o manejarlo según sea necesario
+    throw new Error('No se pudieron obtener los productos. Inténtalo de nuevo más tarde.');
+  }
 };
 
 export const getProductById = async (id: number): Promise<Producto> => {
