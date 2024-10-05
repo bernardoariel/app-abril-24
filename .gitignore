@@ -10,6 +10,9 @@ lerna-debug.log*
 node_modules
 .DS_Store
 dist
+docker
+ios
+android
 dist-ssr
 coverage
 *.local
