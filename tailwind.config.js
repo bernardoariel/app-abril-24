@@ -6,4 +6,8 @@ export default {
   },
 
   plugins: [require('daisyui')],
+
+  daisyui: {
+    themes: ['retro'], // Habilita el tema 'retro' de DaisyUI
+  },
 };
