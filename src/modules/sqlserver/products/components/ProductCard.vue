@@ -2,7 +2,7 @@
   <div class="card bg-base-100 shadow-xl p-4 lg:flex lg:flex-row lg:items-center mb-16">
     <figure class="lg:w-1/2 flex justify-center">
       <img
-        :src="producto.Imagen || imgDefault"
+        :src="producto.Imagen ? producto.Imagen.replace(/:8080/, '') : imgDefault"
         alt="Product Image"
         class="w-full h-auto max-h-[300px] object-contain"
       />
