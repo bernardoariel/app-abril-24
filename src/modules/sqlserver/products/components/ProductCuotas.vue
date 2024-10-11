@@ -42,8 +42,6 @@ interface Props {
 const props = defineProps<Props>();
 
 const precioLista = ref(props.Precio);
-const { formaPago } = useFormaPago();
+
 const { formaPagoPlanes } = useFormaPagoPlanes();
-console.log('formaPagoPlanes::: ', formaPagoPlanes);
-console.log('formaPago::: ', formaPago);
 </script>

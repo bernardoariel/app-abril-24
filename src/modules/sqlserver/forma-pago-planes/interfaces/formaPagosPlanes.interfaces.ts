@@ -5,4 +5,5 @@ export interface FormaPagoPlanes {
   Punitorio: number;
   Coeficiente: number;
   Puntos: number;
+  Nombre?: string | null;
 }
