@@ -5,25 +5,20 @@
         <LoaderComponent v-bind="ConfigLoader" />
       </div>
       <ErrorComponent v-if="isError && !isLoading" />
-      <router-link
-        v-else-if="!isLoading && !isError && producto"
-        :to="`/product/${params.id}/price`"
-      >
-        <ProductCard v-bind="producto" />
-      </router-link>
+
+      <ProductCuotas v-else-if="!isLoading && !isError && producto" v-bind="producto" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import ProductCard from '@/modules/sqlserver/products/components/ProductCard.vue';
+import ProductCuotas from '@/modules/sqlserver/products/components/ProductCuotas.vue';
 import LoaderComponent from '@/common/components/LoaderComponent.vue';
 import ErrorComponent from './ErrorComponent.vue';
 import { useProduct } from '@/modules/sqlserver/products/composable/useProduct';
 
 const { params } = useRoute();
-console.log('params::: ', params);
 
 interface AttrLoader {
   size: number;

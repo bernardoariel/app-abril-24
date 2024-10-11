@@ -5,6 +5,7 @@ import ProductsView from '@/views/ProductsView.vue';
 import SearchProductView from '@/views/SearchProductView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
 import ProductView from '@/views/ProductView.vue';
+import ProductPrice from '@/views/ProductPrice.vue';
 
 const routes = [
   {
@@ -22,6 +23,12 @@ const routes = [
     path: '/product/:id',
     name: 'productDetail',
     component: ProductView,
+    meta: { title: 'Detalle del Producto' },
+  },
+  {
+    path: '/product/:id/price',
+    name: 'productPrice',
+    component: ProductPrice,
     meta: { title: 'Detalle del Producto' },
   },
   {
