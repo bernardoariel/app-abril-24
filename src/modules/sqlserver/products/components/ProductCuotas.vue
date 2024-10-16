@@ -1,25 +1,46 @@
 <template>
-  <div class="card bg-base-100 shadow-xl p-4 lg:flex lg:flex-col lg:items-start mb-16">
+  <div class="card bg-base-100 shadow-xl p-4 mb-16">
+    <div role="alert" class="alert mb-5 alert-warning flex justify-center items-center">
+      <span class="font-bold text-center"> {{ props.Producto }} </span>
+    </div>
+    <div role="alert" class="alert mb-5 flex justify-between">
+      <span class="font-bold"> Contado y Débito = {{ formatPrice(precioConDescuento) }} </span>
+      <span class="font-bold"> Precio de Lista = {{ formatPrice(props.Precio) }} </span>
+    </div>
     <div v-for="(group, codTarjeta) in groupedTarjetas" :key="codTarjeta" class="mb-8">
       <div class="collapse collapse-arrow bg-base-200">
         <input type="checkbox" />
         <div class="collapse-title text-lg font-bold mb-4">
-          {{ group[0].Nombre }} - {{ codTarjeta }}
+          {{ findFormaPagoById(codTarjeta)?.FormaPago || 'Sin nombre' }} - {{ codTarjeta }}
         </div>
         <div class="collapse-content">
-          <table class="table w-full">
+          <table class="table w-full text-center">
             <thead>
               <tr>
-                <th>Cuotas</th>
-                <th>Interes</th>
-                <th>Precio Final</th>
+                <th stu>Cuotas</th>
+                <th stu>Importe Cuota</th>
+                <th stu>Total</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="tarjeta in group" :key="tarjeta.NCuota">
                 <td>{{ tarjeta.NCuota }}</td>
-                <td>{{ tarjeta.Interes }}</td>
-                <td>{{ formatPrice(precioLista * tarjeta.Interes) }}</td>
+                <!--  <td>{{ tarjeta.Interes }}%</td> -->
+                <!-- Precio por cuota con condición -->
+                <td v-if="tarjeta.NCuota === 1">
+                  {{ formatPrice(precioLista * (1 + tarjeta.Interes / 100)) }}
+                </td>
+                <td v-else>
+                  {{
+                    formatPrice(
+                      (precioLista * (1 + (tarjeta.Interes / 100) * tarjeta.NCuota)) /
+                        tarjeta.NCuota,
+                    )
+                  }}
+                </td>
+                <td>
+                  {{ formatPrice(calculateTotal(tarjeta)) }}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -33,6 +54,7 @@
 import { computed, ref } from 'vue';
 import { formatPrice } from '../../../../common/helpers/formatPrice';
 import { useFormaPagoPlanes } from '../../forma-pago-planes/composable/useFormaPagosPlanes';
+import { useFormaPago } from '../../forma-pago/composable/useFormaPago';
 
 // Definir las props
 interface Props {
@@ -49,10 +71,12 @@ const props = defineProps<Props>();
 
 // Precio de lista basado en la prop Precio
 const precioLista = ref(props.Precio);
-
+const precioConDescuento = computed(() => {
+  return precioLista.value * 0.82; // Aplica el 18% de descuento
+});
 // Obtener los datos de forma de pago planes
 const { formaPagoPlanes } = useFormaPagoPlanes();
-
+const { findFormaPagoById } = useFormaPago();
 const arrayCreditos = ['CRE', 'TNA', 'TNP', 'TVI']; // Códigos de crédito
 
 // Filtrar y agrupar los datos por CodForPago
@@ -68,4 +92,10 @@ const groupedTarjetas = computed(() => {
     return acc;
   }, {});
 });
+
+const calculateTotal = (tarjeta: any) => {
+  const cuota =
+    (precioLista.value * (1 + (tarjeta.Interes / 100) * tarjeta.NCuota)) / tarjeta.NCuota;
+  return cuota * tarjeta.NCuota;
+};
 </script>

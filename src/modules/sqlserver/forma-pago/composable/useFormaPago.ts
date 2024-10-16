@@ -26,8 +26,8 @@ export const useFormaPago = () => {
     }
   });
 
-  const findFormaPagoById = (id: number): FormaPago | undefined => {
-    return formaPago.value.find((marca) => formaPago.CodMarca === id);
+  const findFormaPagoById = (CodForPago: string): FormaPago | undefined => {
+    return formaPago.value.find((pago) => pago.CodForPago === CodForPago);
   };
 
   return {
