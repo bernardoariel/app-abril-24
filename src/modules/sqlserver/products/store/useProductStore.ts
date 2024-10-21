@@ -2,8 +2,8 @@ import type { Producto } from '@/interfaces/products.interface';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-export const useProductStore = defineStore('product', () => {
-  const products = ref<Producto | Producto[]>([]);
+export const useProductStore = defineStore('useProductStore', () => {
+  const productos = ref<Producto | Producto[]>([]);
 
   return {
     //* Props
@@ -11,9 +11,9 @@ export const useProductStore = defineStore('product', () => {
     //* Getters
 
     //* Actions
-    products,
+    productos,
     setProducts(newProducts: Producto[]) {
-      products.value = newProducts;
+      productos.value = newProducts;
     },
   };
 });

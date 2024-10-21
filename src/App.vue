@@ -3,14 +3,6 @@ import { RouterView } from 'vue-router';
 import NavHeader from './components/NavHeader.vue';
 import FooterComponent from './components/FooterComponent.vue';
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools';
-import { useSucursales } from '@/modules/sqlserver/sucursales/composable/useSucursales';
-import { useMarcas } from '@/modules/sqlserver/marcas/composable/useMarcas';
-import { useFormaPago } from './modules/sqlserver/forma-pago/composable/useFormaPago';
-
-const { sucursales } = useSucursales();
-const { marcas } = useMarcas();
-const { tarjetas } = useFormaPago();
-console.log(import.meta.env);
 </script>
 
 <template>

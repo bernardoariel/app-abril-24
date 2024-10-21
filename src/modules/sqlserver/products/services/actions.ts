@@ -6,12 +6,11 @@ interface GetProductsOptions {
   term: string;
 }
 
-export const getProducts = async ({ term }: GetProductsOptions): Promise<Producto[]> => {
+export const getProducts = async (): Promise<Producto[]> => {
   try {
-    const { data } = await abrilApiData.get<Producto[]>(`productos/${term}`);
-    return data;
+    const { data } = await abrilApiData.get<Producto[]>(`productos`);
+    return data.result;
   } catch (error) {
-    // Verifica si es un error de Axios
     if (axios.isAxiosError(error)) {
       console.error('Error al obtener productos:', error.response?.data || error.message);
     } else {

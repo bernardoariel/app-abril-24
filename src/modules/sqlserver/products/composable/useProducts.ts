@@ -1,33 +1,36 @@
+import { computed, watch } from 'vue';
 import { useQuery } from '@tanstack/vue-query';
+
 import { getProducts, getProductByMarcas } from '../services/actions';
 import type { ProductsResponse } from '../interfaces/products.response';
-import { computed } from 'vue';
+import { useProductStore } from '../store/useProductStore';
+import { storeToRefs } from 'pinia';
 
 interface Options {
   term: string;
   searchByMarcas?: boolean;
 }
 
-export const useProducts = ({ term, searchByMarcas = false }: Options) => {
-  console.log('searchByMarcas in useProducts: ', searchByMarcas);
+export const useProducts = () => {
+  const store = useProductStore();
+  const { productos } = storeToRefs(store);
 
-  const { isLoading, isError, error, data } = useQuery<ProductsResponse[]>({
-    queryKey: ['producto', term, searchByMarcas ? 'marcas' : 'productos'],
-    queryFn: () => (searchByMarcas ? getProductByMarcas({ term }) : getProducts({ term })),
+  const { isLoading, data } = useQuery<ProductsResponse[]>({
+    queryKey: ['productos'],
+    queryFn: () => getProducts(),
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60, // los datos se consideran frescos por 1 minuto
+    staleTime: 1000 * 60 * 30, // los datos se consideran frescos por 1 hora
     retry: false,
   });
 
-  // Usamos computed para manejar los datos, garantizando que 'productos' siempre sea un array
-  const productos = computed<ProductsResponse[]>(() => {
-    return data.value && Array.isArray(data.value) ? data.value : []; // Validamos que sea un array
+  watch(data, (newProducts) => {
+    if (newProducts) {
+      store.setProducts(newProducts);
+    }
   });
 
   return {
     productos,
     isLoading,
-    isError,
-    error,
   };
 };
