@@ -28,9 +28,10 @@
           class="menu dropdown-content bg-base-100 rounded-box z-[1] w-100 p-2 shadow"
         >
           <li
-            v-for="producto in filteredProducts"
+            v-for="(producto, index) in filteredProducts"
             :key="producto.CodProducto"
             @click="handleProductClick(producto.CodProducto)"
+            :class="{ highlight: selectedIndex === index }"
           >
             <a>{{ producto.Producto }} - {{ producto.CodProducto }}</a>
           </li>
@@ -72,12 +73,11 @@ const filteredProducts = computed(() => {
       );
     });
   }
+  selectedIndex.value = -1;
   return [];
 });
 
 const handleProductClick = (codProducto: number) => {
-  console.log('Producto seleccionado:', codProducto);
-  // Ejemplo: redirigir a una página de detalles del producto
   router.replace(`/product/${codProducto}`);
 };
 
