@@ -1,5 +1,10 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-screen bg-gray-100">
+  <div class="flex flex-col items-center justify-center h-screen bg-orange-300">
+    <!-- Imagen en la parte superior del formulario -->
+    <div class="w-full max-w-xs mb-4">
+      <img src="@/assets/img/logo-abril.jpg" alt="Login" class="w-50 h-auto mx-auto rounded-lg" />
+    </div>
+
     <div class="w-full max-w-xs">
       <h1 class="text-2xl font-bold mb-4 text-center">Login</h1>
       <input
@@ -14,7 +19,7 @@
         placeholder="Password"
         class="input input-bordered w-full mb-4"
       />
-      <button @click="handleLogin" class="btn btn-primary w-full">Login</button>
+      <button @click="handleLogin" class="btn btn-warning w-full">Conectarse</button>
     </div>
   </div>
 </template>

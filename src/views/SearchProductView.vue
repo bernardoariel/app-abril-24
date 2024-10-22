@@ -1,11 +1,13 @@
 <template>
-  <div class="w-full h-full">
+  <div class="w-full h-full bg-orange-200">
     <div class="flex flex-col h-full justify-start items-center pt-10">
       <div class="relative w-full max-w-lg px-4">
         <!-- Ajusté los márgenes y los anchos -->
-        <div class="flex items-center w-full">
+        <div class="flex items-center w-full bg-orange-200">
           <!-- Contenedor del input y loader -->
-          <label class="input input-bordered flex items-center gap-2 grow h-12 relative w-full">
+          <label
+            class="input input-bordered flex items-center gap-2 grow h-12 relative w-full text-orange-900 bg-orange-300"
+          >
             <input
               ref="searchInput"
               v-model="searchTerm"
@@ -20,7 +22,7 @@
         </div>
 
         <!-- Dropdown de resultados -->
-        <p v-if="isLoading">Cargando clientes...</p>
+        <p v-if="isLoading" class="text-orange-600 text-center mt-2">Cargando productos</p>
         <ul
           v-else-if="filteredProducts.length > 0"
           class="menu dropdown-content bg-base-100 rounded-box z-[1] w-100 p-2 shadow"
@@ -108,5 +110,9 @@ const selectProduct = () => {
   font-weight: bold; /* Mantén el texto en negrita */
   padding: 0 2px; /* Un pequeño relleno alrededor del texto resaltado */
   border-radius: 3px; /* Bordes ligeramente redondeados */
+}
+input::placeholder {
+  color: #ffa07a; /* Color para el texto del placeholder */
+  opacity: 1; /* Ajusta la opacidad si es necesario */
 }
 </style>

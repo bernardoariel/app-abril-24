@@ -1,49 +1,54 @@
 <template>
   <div class="card bg-base-100 shadow-xl p-4 mb-16">
-    <div role="alert" class="alert mb-5 alert-warning flex justify-center items-center">
-      <span class="font-bold text-center"> {{ props.Producto }} </span>
+    <div v-if="isLoading" class="flex justify-center items-center">
+      <LoaderComponent v-bind="ConfigLoader" />
     </div>
-    <div role="alert" class="alert mb-5 flex justify-between">
-      <span class="font-bold"> Contado y Débito = {{ formatPrice(precioConDescuento) }} </span>
-      <span class="font-bold"> Precio de Lista = {{ formatPrice(props.Precio) }} </span>
-    </div>
-    <div v-for="(group, codTarjeta) in groupedTarjetas" :key="codTarjeta" class="mb-8">
-      <div class="collapse collapse-arrow bg-base-200">
-        <input type="checkbox" />
-        <div class="collapse-title text-lg font-bold mb-4">
-          {{ findFormaPagoById(codTarjeta)?.FormaPago || 'Sin nombre' }} - {{ codTarjeta }}
-        </div>
-        <div class="collapse-content">
-          <table class="table w-full text-center">
-            <thead>
-              <tr>
-                <th stu>Cuotas</th>
-                <th stu>Importe Cuota</th>
-                <th stu>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="tarjeta in group" :key="tarjeta.NCuota">
-                <td>{{ tarjeta.NCuota }}</td>
-                <!--  <td>{{ tarjeta.Interes }}%</td> -->
-                <!-- Precio por cuota con condición -->
-                <td v-if="tarjeta.NCuota === 1">
-                  {{ formatPrice(precioLista * (1 + tarjeta.Interes / 100)) }}
-                </td>
-                <td v-else>
-                  {{
-                    formatPrice(
-                      (precioLista * (1 + (tarjeta.Interes / 100) * tarjeta.NCuota)) /
-                        tarjeta.NCuota,
-                    )
-                  }}
-                </td>
-                <td>
-                  {{ formatPrice(calculateTotal(tarjeta)) }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <div v-else>
+      <div role="alert" class="alert mb-5 alert-warning flex justify-center items-center">
+        <span class="font-bold text-center"> {{ props.Producto }} </span>
+      </div>
+      <div role="alert" class="alert mb-5 flex justify-between">
+        <span class="font-bold"> Contado y Débito = {{ formatPrice(precioConDescuento) }} </span>
+        <span class="font-bold"> Precio de Lista = {{ formatPrice(props.Precio) }} </span>
+      </div>
+      <div v-for="(group, codTarjeta) in groupedTarjetas" :key="codTarjeta" class="mb-8">
+        <div class="collapse collapse-arrow bg-base-200">
+          <input type="checkbox" />
+          <div class="collapse-title text-lg font-bold mb-4">
+            {{ findFormaPagoById(codTarjeta)?.FormaPago || 'Sin nombre' }} - {{ codTarjeta }}
+          </div>
+          <div class="collapse-content">
+            <table class="table w-full text-center">
+              <thead>
+                <tr>
+                  <th stu>Cuotas</th>
+                  <th stu>Importe Cuota</th>
+                  <th stu>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="tarjeta in group" :key="tarjeta.NCuota">
+                  <td>{{ tarjeta.NCuota }}</td>
+                  <!--  <td>{{ tarjeta.Interes }}%</td> -->
+                  <!-- Precio por cuota con condición -->
+                  <td v-if="tarjeta.NCuota === 1">
+                    {{ formatPrice(precioLista * (1 + tarjeta.Interes / 100)) }}
+                  </td>
+                  <td v-else>
+                    {{
+                      formatPrice(
+                        (precioLista * (1 + (tarjeta.Interes / 100) * tarjeta.NCuota)) /
+                          tarjeta.NCuota,
+                      )
+                    }}
+                  </td>
+                  <td>
+                    {{ formatPrice(calculateTotal(tarjeta)) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -67,6 +72,14 @@ interface Props {
   Precio: number;
 }
 
+interface AttrLoader {
+  size: number;
+  color: string;
+}
+const ConfigLoader: AttrLoader = {
+  size: 80,
+  color: '#000',
+};
 const props = defineProps<Props>();
 
 // Precio de lista basado en la prop Precio

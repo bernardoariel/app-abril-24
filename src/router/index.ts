@@ -6,7 +6,8 @@ import SearchProductView from '@/views/SearchProductView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
 import ProductView from '@/views/ProductView.vue';
 import ProductPrice from '@/views/ProductPrice.vue';
-// Función para decodificar el token JWT manualmente
+import DefaultLayout from '@/layouts/DefaultLayout.vue';
+
 export function parseJwt(token: string) {
   try {
     const base64Url = token.split('.')[1];
@@ -49,32 +50,38 @@ const routes = [
     meta: { requiresAuth: false },
   },
   {
-    path: '/products',
-    name: 'productList',
-    component: ProductsView,
-    meta: { title: 'Listado de Productos', requiresAuth: true },
-  },
-  {
-    path: '/product/:id',
-    name: 'productDetail',
-    component: ProductView,
-    meta: { title: 'Detalle del Producto', requiresAuth: true },
-  },
-  {
-    path: '/product/:id/price',
-    name: 'productPrice',
-    component: ProductPrice,
-    meta: { title: 'Detalle del Producto', requiresAuth: true },
-  },
-  {
-    path: '/search',
-    name: 'searchProduct',
-    component: SearchProductView,
-    meta: { title: 'Buscar Producto', requiresAuth: true },
+    path: '/dashboard',
+    component: DefaultLayout,
+    children: [
+      {
+        path: '/products',
+        name: 'productList',
+        component: ProductsView,
+        meta: { title: 'Listado de Productos', requiresAuth: false },
+      },
+      {
+        path: '/product/:id',
+        name: 'productDetail',
+        component: ProductView,
+        meta: { title: 'Detalle del Producto', requiresAuth: false },
+      },
+      {
+        path: '/product/:id/price',
+        name: 'productPrice',
+        component: ProductPrice,
+        meta: { title: 'Detalle del Producto', requiresAuth: false },
+      },
+      {
+        path: '/search',
+        name: 'searchProduct',
+        component: SearchProductView,
+        meta: { title: 'Buscar Producto', requiresAuth: false },
+      },
+    ],
   },
   {
     path: '/',
-    redirect: '/search',
+    redirect: '/login',
   },
   {
     path: '/:pathMatch(.*)*',
@@ -87,34 +94,13 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!isAuthenticated()) {
-      localStorage.removeItem('authToken'); // Eliminar el token si ha expirado
-      return next({ name: 'login' }); // Redirigir al login si no está autenticado
-    }
-  }
-  if (to.name === 'login' && isAuthenticated()) {
-    return next({ name: 'searchProduct' }); // Si está autenticado, redirigir al home
-  }
 
-  next();
-});
-/* router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
   let query = from.query;
   let fromName = from.name;
 
-  // Si venimos de `productDetail` y vamos a `productList`, guardamos `searchProduct` como la ruta anterior.
-  if (from.name === 'productDetail' && to.name === 'productList') {
-    fromName = 'searchProduct';
-  }
-
-  // Guardar la ruta anterior solo si estamos en `productDetail` o `productList`.
-  if (
-    from.name === 'productList' ||
-    from.name === 'searchProduct' ||
-    (from.name === 'productDetail' && to.name === 'productList')
-  ) {
+  // Si vienes de la vista de detalles y vas a la vista de precios, guardamos la ruta de detalles
+  if (from.name === 'productDetail' && to.name === 'productPrice') {
     localStorage.setItem(
       'previousRoute',
       JSON.stringify({
@@ -123,7 +109,30 @@ router.beforeEach((to, from, next) => {
       }),
     );
   }
+
+  // Si vienes de la vista de precios y vas a cualquier otra ruta, volvemos a la vista de detalles
+  if (from.name === 'productPrice' && to.name === 'productDetail') {
+    localStorage.setItem(
+      'previousRoute',
+      JSON.stringify({
+        name: 'searchProduct',
+        query: query,
+      }),
+    );
+  }
+
+  // Si vienes de la búsqueda de productos y vas a los detalles de un producto, guardamos la búsqueda como ruta previa
+  if (from.name === 'searchProduct' && to.name === 'productDetail') {
+    localStorage.setItem(
+      'previousRoute',
+      JSON.stringify({
+        name: 'searchProduct',
+        query: query,
+      }),
+    );
+  }
+
   next();
-}); */
+});
 
 export default router;
