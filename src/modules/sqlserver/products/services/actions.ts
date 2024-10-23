@@ -21,16 +21,16 @@ export const getProducts = async (): Promise<Producto[]> => {
   }
 };
 
-export const getProductById = async (id: number): Promise<Producto> => {
-  await sleep(2);
+export const getProductById = async (term: number | string): Promise<Producto> => {
+  console.log('term:::!! ', term);
   try {
-    const { data } = await abrilApiData.get<Producto>(`/productos/${id}`);
+    const { data } = await abrilApiData.get<Producto>(`/productos/${term}`);
     if (!data) {
       throw new Error('Producto no encontrado');
     }
     return data;
   } catch (error) {
-    console.error('Error fetching product by id: ', error);
+    console.error('Error fetching product by term: ', error);
     throw error;
   }
 };

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/vue-query';
-import { getProducts, getProductByMarcas } from '../services/actions';
+import { getProducts, getProductByMarcas, getProductById } from '../services/actions';
 import type { ProductsResponse } from '../interfaces/products.response';
 import { computed } from 'vue';
 
@@ -9,11 +9,15 @@ interface Options {
 }
 
 export const useProductsByTerm = ({ term, searchByMarcas = false }: Options) => {
-  console.log('searchByMarcas in useProducts: ', searchByMarcas);
-
   const { isLoading, isError, error, data } = useQuery<ProductsResponse[]>({
     queryKey: ['producto', term, searchByMarcas ? 'marcas' : 'productos'],
-    queryFn: () => (searchByMarcas ? getProductByMarcas({ term }) : getProducts({ term })),
+    queryFn: () => {
+      if (searchByMarcas) {
+        return getProductByMarcas({ term });
+      } else {
+        return getProductById(term);
+      }
+    },
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60, // los datos se consideran frescos por 1 minuto
     retry: false,

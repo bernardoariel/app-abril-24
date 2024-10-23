@@ -19,6 +19,7 @@
               @keydown.enter.prevent="selectProduct"
             />
           </label>
+          <button @click="handleSearch" class="btn btn-primary ml-2 h-12">Buscar</button>
         </div>
 
         <!-- Dropdown de resultados -->
@@ -33,7 +34,7 @@
             @click="handleItemClick(item)"
             :class="{ highlight: selectedIndex === index }"
           >
-            <a>{{ item.name }}</a>
+            <a>{{ item.name }} - {{ item.CodProducto }}</a>
           </li>
         </ul>
       </div>
@@ -126,6 +127,17 @@ const currentItems = computed(() => {
 const selectProduct = () => {
   if (selectedIndex.value >= 0 && selectedIndex.value < filteredItems.value.length) {
     handleItemClick(filteredItems.value[selectedIndex.value]);
+  }
+};
+const handleSearch = async () => {
+  const term = searchTerm.value.trim();
+  if (!term) return;
+  const isNumber = !isNaN(Number(term));
+
+  if (isNumber) {
+    router.replace(`/product/${term}`);
+  } else {
+    router.replace({ name: 'productList', query: { search: term } });
   }
 };
 </script>
