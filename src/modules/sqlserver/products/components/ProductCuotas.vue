@@ -63,7 +63,7 @@ interface Props {
   Medida: string;
   Descripcion: string;
   Stock: number;
-  Imagen: string;
+  Imagen: string | null;
   Precio: number;
 }
 
@@ -75,7 +75,9 @@ const ConfigLoader: AttrLoader = {
   size: 80,
   color: '#000',
 };
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  Imagen: '',
+});
 
 // Precio de lista basado en la prop Precio
 const precioLista = ref(props.Precio);
