@@ -2,8 +2,8 @@
   <div class="w-full h-full bg-orange-200">
     <div class="flex flex-col h-full justify-start items-center pt-10">
       <div class="relative w-full max-w-lg px-4">
-        <!-- Ajusté los márgenes y los anchos -->
-        <div class="flex items-center w-full bg-orange-200">
+        <p v-if="isLoading" class="text-orange-600 text-center text-4xl mt-2">Cargando productos</p>
+        <div v-else class="flex items-center w-full bg-orange-200">
           <!-- Contenedor del input y loader -->
           <label
             class="input input-bordered flex items-center gap-2 grow h-12 relative w-full text-orange-900 bg-orange-300"
@@ -22,9 +22,9 @@
         </div>
 
         <!-- Dropdown de resultados -->
-        <p v-if="isLoading" class="text-orange-600 text-center mt-2">Cargando productos</p>
+
         <ul
-          v-else-if="currentProducts.length > 0"
+          v-if="currentProducts.length > 0"
           class="menu dropdown-content bg-base-100 rounded-box z-[1] w-100 p-2 shadow"
         >
           <li
