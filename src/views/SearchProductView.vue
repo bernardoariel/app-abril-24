@@ -125,7 +125,7 @@ const currentItems = computed(() => {
 // Seleccionar producto con "Enter"
 const selectProduct = () => {
   if (selectedIndex.value >= 0 && selectedIndex.value < filteredItems.value.length) {
-    handleItemClick(filteredItems.value[selectedIndex.value].CodProducto);
+    handleItemClick(filteredItems.value[selectedIndex.value]);
   }
 };
 </script>
