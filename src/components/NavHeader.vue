@@ -20,11 +20,20 @@ const title = computed(() => {
 });
 const goBack = () => {
   const previousRoute = localStorage.getItem('previousRoute');
+  const productListQuery = localStorage.getItem('productListQuery');
+
   if (previousRoute) {
-    const { name, query } = JSON.parse(previousRoute);
-    router.replace({ name, query });
+    const { name } = JSON.parse(previousRoute);
+
+    if (name === 'productList' && productListQuery) {
+      const parsedQuery = JSON.parse(productListQuery);
+      router.replace({ name, query: parsedQuery });
+    } else {
+      // Si no, volvemos a la ruta anterior sin `query`
+      router.replace({ name });
+    }
   } else {
-    router.replace({ name: 'searchProduct' }); // fallback a 'searchProduct' si no hay ruta anterior
+    router.replace({ name: 'searchProduct' });
   }
 };
 </script>

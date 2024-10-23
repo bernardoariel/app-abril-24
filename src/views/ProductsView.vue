@@ -21,10 +21,10 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { useProducts } from '@/modules/sqlserver/products/composable/useProducts';
 import ProductList from '@/modules/sqlserver/products/components/ProductList.vue';
 import LoaderComponent from '@/common/components/LoaderComponent.vue';
 import NotMatchComponent from '@/common/components/NotMatchComponent.vue';
+import { useProductsByTerm } from '../modules/sqlserver/products/composable/useProductsByTerm';
 
 interface AttrLoader {
   size: number;
@@ -37,10 +37,16 @@ const ConfigLoader: AttrLoader = {
 };
 
 const { query } = useRoute();
+console.log('query::: ', query);
 const searchQuery = (query.search as string) || '';
+console.log('searchQuery::: ', searchQuery);
 const searchByMarcas = query.searchByMarcas === 'true';
+console.log('searchByMarcas::: ', searchByMarcas);
 
-const { productos, isLoading, isError, error } = useProducts({ term: searchQuery, searchByMarcas });
+const { productos, isLoading, isError, error } = useProductsByTerm({
+  term: searchQuery,
+  searchByMarcas,
+});
 
 interface ErrorResponse {
   response?: {

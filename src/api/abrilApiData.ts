@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { refreshToken } from '@/modules/Auth/services/actions'; // La función para manejar la renovación del token
-import { useRouter } from 'vue-router';
 
 const getApiBaseUrl = () => {
   if (import.meta.env.MODE === 'production') {
@@ -50,10 +49,7 @@ abrilApiData.interceptors.response.use(
         // Si la renovación falla, limpiar los tokens y redirigir al login
         localStorage.removeItem('authToken');
         localStorage.removeItem('refreshToken');
-        alert('Tu sesión ha expirado, por favor inicia sesión nuevamente.');
-        const router = useRouter(); // Obtener el router
-        router.replace({ name: 'login' }); // Redirigir a la página de login
-        return Promise.reject(refreshError);
+        window.location.href = '/login';
       }
     }
     // Para cualquier otro error, retornamos el error original

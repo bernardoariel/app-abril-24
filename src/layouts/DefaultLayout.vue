@@ -4,7 +4,7 @@
     <div class="flex-grow bg-orange-200">
       <RouterView />
     </div>
-    <!-- <FooterComponent /> -->
+    <FooterComponent />
   </div>
 </template>
 

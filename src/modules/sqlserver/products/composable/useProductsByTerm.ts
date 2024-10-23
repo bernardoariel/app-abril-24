@@ -8,7 +8,7 @@ interface Options {
   searchByMarcas?: boolean;
 }
 
-export const useProducts = ({ term, searchByMarcas = false }: Options) => {
+export const useProductsByTerm = ({ term, searchByMarcas = false }: Options) => {
   console.log('searchByMarcas in useProducts: ', searchByMarcas);
 
   const { isLoading, isError, error, data } = useQuery<ProductsResponse[]>({

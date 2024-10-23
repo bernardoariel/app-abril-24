@@ -1,7 +1,7 @@
-export const formatPrice = (value: number): string => {
-  // Convertimos el número a una cadena y usamos una expresión regular para formatearlo
+export const formatPrice = (value: number | undefined): string => {
+  if (value === undefined || isNaN(value)) {
+    return '-'; // Retorna un valor por defecto si no hay un número válido
+  }
   const formattedValue = value.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-  // Agregamos el símbolo de peso y el punto final
   return `$ ${formattedValue}.-`;
 };

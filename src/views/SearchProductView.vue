@@ -24,21 +24,21 @@
         <!-- Dropdown de resultados -->
 
         <ul
-          v-if="currentProducts.length > 0"
+          v-if="currentItems.length > 0"
           class="menu dropdown-content bg-base-100 rounded-box z-[1] w-100 p-2 shadow"
         >
           <li
-            v-for="(producto, index) in currentProducts"
-            :key="producto.CodProducto"
-            @click="handleProductClick(producto.CodProducto)"
+            v-for="(item, index) in currentItems"
+            :key="item.CodProducto || item.CodMarca"
+            @click="handleItemClick(item)"
             :class="{ highlight: selectedIndex === index }"
           >
-            <a>{{ producto.Producto }} - {{ producto.CodProducto }}</a>
+            <a>{{ item.name }}</a>
           </li>
         </ul>
       </div>
     </div>
-    <div class="absolute bottom-10 w-full flex justify-center">
+    <div class="absolute bottom-28 w-full flex justify-center">
       <img src="../assets/img/logo.png" alt="imagen" class="w-48 opacity-60 h-auto" />
     </div>
   </div>
@@ -63,35 +63,50 @@ const router = useRouter();
 const searchTerm = ref('');
 // Índice para rastrear la opción seleccionada
 const selectedIndex = ref(-1);
-const filteredProducts = computed(() => {
-  console.log('Término de búsqueda:', searchTerm.value);
+
+const allItems = computed(() => {
+  const combinedItems = [
+    ...productos.value.map((producto) => ({
+      type: 'product',
+      CodProducto: producto.CodProducto,
+      name: producto.Producto || '', // Evitar null en nombre de producto
+    })),
+    ...marcas.value.map((marca) => ({
+      type: 'marca',
+      CodMarca: marca.CodMarca,
+      name: marca.Marca || '', // Evitar null en nombre de marca
+    })),
+  ];
+  return combinedItems;
+});
+
+const filteredItems = computed(() => {
   if (searchTerm.value.length >= 3) {
     const searchTerms = searchTerm.value.toLowerCase().split(' ');
-    return productos.value.filter((producto) => {
-      // Verifica si cada término de búsqueda coincide con el nombre o el código del producto
-      return searchTerms.every(
-        (term) =>
-          producto.Producto?.toLowerCase().includes(term) ||
-          producto.Descripcion?.toLowerCase().includes(term) ||
-          producto.CodProducto.toString().includes(term),
-      );
-    });
+    return allItems.value.filter((item) =>
+      searchTerms.every((term) => item.name?.toLowerCase().includes(term)),
+    );
   }
   selectedIndex.value = -1;
   return [];
 });
-
-const handleProductClick = (codProducto: number) => {
-  router.replace(`/product/${codProducto}`);
+const handleItemClick = (item) => {
+  console.log('item::: ', item);
+  if (item.type === 'product' && item.CodProducto) {
+    router.replace(`/product/${item.CodProducto}`);
+  } else if (item.type === 'marca' && item.CodMarca) {
+    router.replace({
+      name: 'productList',
+      query: { search: item.name, searchByMarcas: 'true' },
+    });
+  } else {
+    console.warn('Elemento sin ID válido:', item);
+  }
 };
-const currentProducts = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredProducts.value.slice(start, end);
-});
+
 // Manejar las teclas "Down" (Abajo)
 const handleKeyDown = () => {
-  if (selectedIndex.value < filteredProducts.value.length - 1) {
+  if (selectedIndex.value < filteredItems.value.length - 1) {
     selectedIndex.value++;
   }
 };
@@ -102,11 +117,15 @@ const handleKeyUp = () => {
     selectedIndex.value--;
   }
 };
-
+const currentItems = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredItems.value.slice(start, end);
+});
 // Seleccionar producto con "Enter"
 const selectProduct = () => {
-  if (selectedIndex.value >= 0 && selectedIndex.value < filteredProducts.value.length) {
-    handleProductClick(filteredProducts.value[selectedIndex.value].CodProducto);
+  if (selectedIndex.value >= 0 && selectedIndex.value < filteredItems.value.length) {
+    handleItemClick(filteredItems.value[selectedIndex.value].CodProducto);
   }
 };
 </script>
