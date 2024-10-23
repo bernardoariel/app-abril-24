@@ -22,7 +22,6 @@ export const getProducts = async (): Promise<Producto[]> => {
 };
 
 export const getProductById = async (term: number | string): Promise<Producto> => {
-  console.log('term:::!! ', term);
   try {
     const { data } = await abrilApiData.get<Producto>(`/productos/${term}`);
     if (!data) {

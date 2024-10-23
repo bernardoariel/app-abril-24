@@ -92,7 +92,6 @@ const filteredItems = computed(() => {
   return [];
 });
 const handleItemClick = (item) => {
-  console.log('item::: ', item);
   if (item.type === 'product' && item.CodProducto) {
     router.replace(`/product/${item.CodProducto}`);
   } else if (item.type === 'marca' && item.CodMarca) {

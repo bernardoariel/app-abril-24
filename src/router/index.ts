@@ -105,7 +105,7 @@ router.beforeEach((to, from, next) => {
         name, // Verificar que la query no esté vacía
       }),
     );
-    console.log('Guardando previousRoute:', name);
+    // console.log('Guardando previousRoute:', name);
   };
 
   if (from.name === 'searchProduct' && to.name === 'productList') {
@@ -143,13 +143,13 @@ router.beforeEach((to, from, next) => {
 
   if (to.name === 'productList' && Object.keys(to.query).length > 0) {
     localStorage.setItem('productListQuery', JSON.stringify(to.query));
-    console.log('productListQuery guardado:', to.query);
+    // console.log('productListQuery guardado:', to.query);
   }
   if (to.name === 'searchProduct') {
     const productListQuery = localStorage.getItem('productListQuery');
     if (!productListQuery) return;
     localStorage.setItem('productListQuery', JSON.stringify({}));
-    console.log('productListQuery ha sido limpiado');
+    // console.log('productListQuery ha sido limpiado');
   }
   next();
 });

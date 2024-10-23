@@ -23,7 +23,6 @@ import ErrorComponent from './ErrorComponent.vue';
 import { useProduct } from '@/modules/sqlserver/products/composable/useProduct';
 
 const { params } = useRoute();
-console.log('params::: ', params);
 
 interface AttrLoader {
   size: number;

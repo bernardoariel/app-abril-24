@@ -37,11 +37,8 @@ const ConfigLoader: AttrLoader = {
 };
 
 const { query } = useRoute();
-console.log('query::: ', query);
 const searchQuery = (query.search as string) || '';
-console.log('searchQuery::: ', searchQuery);
 const searchByMarcas = query.searchByMarcas === 'true';
-console.log('searchByMarcas::: ', searchByMarcas);
 
 const { productos, isLoading, isError, error } = useProductsByTerm({
   term: searchQuery,
