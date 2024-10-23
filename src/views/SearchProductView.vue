@@ -24,11 +24,11 @@
         <!-- Dropdown de resultados -->
         <p v-if="isLoading" class="text-orange-600 text-center mt-2">Cargando productos</p>
         <ul
-          v-else-if="filteredProducts.length > 0"
+          v-else-if="currentProducts.length > 0"
           class="menu dropdown-content bg-base-100 rounded-box z-[1] w-100 p-2 shadow"
         >
           <li
-            v-for="(producto, index) in filteredProducts"
+            v-for="(producto, index) in currentProducts"
             :key="producto.CodProducto"
             @click="handleProductClick(producto.CodProducto)"
             :class="{ highlight: selectedIndex === index }"
@@ -37,6 +37,9 @@
           </li>
         </ul>
       </div>
+    </div>
+    <div class="absolute bottom-10 w-full flex justify-center">
+      <img src="../assets/img/logo.png" alt="imagen" class="w-48 opacity-60 h-auto" />
     </div>
   </div>
 </template>
@@ -54,7 +57,8 @@ const { sucursales } = useSucursales();
 const { tarjetas } = useFormaPago();
 const { findMarcasById, marcas } = useMarcas();
 const { productos, isLoading } = useProducts();
-
+const itemsPerPage = ref(10); // Definir la cantidad de elementos que quieres mostrar por página
+const currentPage = ref(1); // Página inicial
 const router = useRouter();
 const searchTerm = ref('');
 // Índice para rastrear la opción seleccionada
@@ -80,7 +84,11 @@ const filteredProducts = computed(() => {
 const handleProductClick = (codProducto: number) => {
   router.replace(`/product/${codProducto}`);
 };
-
+const currentProducts = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredProducts.value.slice(start, end);
+});
 // Manejar las teclas "Down" (Abajo)
 const handleKeyDown = () => {
   if (selectedIndex.value < filteredProducts.value.length - 1) {
@@ -112,7 +120,7 @@ const selectProduct = () => {
   border-radius: 3px; /* Bordes ligeramente redondeados */
 }
 input::placeholder {
-  color: #ffa07a; /* Color para el texto del placeholder */
-  opacity: 1; /* Ajusta la opacidad si es necesario */
+  color: #ef7e00; /* Color para el texto del placeholder */
+  opacity: 1;
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div class="app-container bg-gray-100 min-h-screen flex flex-col">
     <NavHeader />
-    <div class="flex-grow">
+    <div class="flex-grow bg-orange-200">
       <RouterView />
     </div>
-    <FooterComponent />
+    <!-- <FooterComponent /> -->
   </div>
 </template>
 

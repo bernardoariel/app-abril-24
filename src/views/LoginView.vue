@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-screen bg-orange-300">
+  <div class="flex flex-col items-center justify-center h-screen bg-orangeCustom2">
     <!-- Imagen en la parte superior del formulario -->
     <div class="w-full max-w-xs mb-4">
-      <img src="@/assets/img/logo-abril.jpg" alt="Login" class="w-50 h-auto mx-auto rounded-lg" />
+      <img src="@/assets/img/logo2.png" alt="Login" class="w-50 h-auto mx-auto rounded-lg" />
     </div>
 
     <div class="w-full max-w-xs">
@@ -19,7 +19,7 @@
         placeholder="Password"
         class="input input-bordered w-full mb-4"
       />
-      <button @click="handleLogin" class="btn btn-warning w-full">Conectarse</button>
+      <button @click="handleLogin" class="btn btn-primary w-full">Conectarse</button>
     </div>
   </div>
 </template>

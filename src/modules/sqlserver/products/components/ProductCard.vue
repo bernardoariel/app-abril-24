@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-base-100 shadow-xl p-4 lg:flex lg:flex-row lg:items-center mb-16">
+  <div class="card bg-orange-300 shadow-xl p-4 lg:flex lg:flex-row lg:items-center mb-16">
     <figure class="lg:w-1/2 flex justify-center">
       <img
         :src="producto.Imagen ? producto.Imagen.replace(/:8080/, '') : imgDefault"
