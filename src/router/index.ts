@@ -95,6 +95,13 @@ const router = createRouter({
   routes,
 });
 router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+
+  // Si la ruta requiere autenticación y el usuario no está autenticado
+  if (requiresAuth && !isAuthenticated()) {
+    // Redirigir al login
+    return next({ name: 'login' });
+  }
   let queryList = from.query || {};
 
   // Guardar la ruta anterior con su query

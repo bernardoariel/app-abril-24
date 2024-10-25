@@ -40,7 +40,7 @@ const handleLogin = async () => {
   const result = await login(email.value, password.value); // Usar la función login desde actions.ts
 
   if (result.success) {
-    console.log('Login exitoso:', result.data);
+    // console.log('Login exitoso:', result.data);
     router.push({ name: 'searchProduct' }); // Redirigir después del login
   } else {
     console.error('Error al iniciar sesión:', result.error);
