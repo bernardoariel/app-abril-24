@@ -1,7 +1,10 @@
 <template>
-  <div class="card bg-orange-300 shadow-xl p-4 mb-16">
-    <div role="alert" class="alert mb-5 alert-warning flex justify-center items-center">
-      <span class="font-bold text-center text-white"> {{ props.Producto }} </span>
+  <div class="card bg-white text-orangeCustom2 shadow-xl p-4 mb-16">
+    <div
+      role="alert"
+      class="alert mb-5 alert-warning flex justify-center items-center bg-orangeCustom3Translucent"
+    >
+      <span class="font-bold text-center text-orangeCustom2"> {{ props.Producto }} </span>
     </div>
     <div role="alert" class="alert mb-5 bg-orange-300 flex justify-between">
       <span class="font-bold"> Contado y Débito = {{ formatPrice(precioConDescuento) }} </span>

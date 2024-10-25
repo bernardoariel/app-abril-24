@@ -9,6 +9,7 @@ export default {
         orangeCustom3: '#FCB800',
         orangeCustom4: '#efae00',
         orangeCustom5: '#F27F00',
+        orangeCustom3Translucent: 'rgba(252, 184, 0, 0.4)',
       },
     },
   },

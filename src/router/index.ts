@@ -99,13 +99,13 @@ router.beforeEach((to, from, next) => {
 
   // Si la ruta requiere autenticación y el usuario no está autenticado
   if (requiresAuth && !isAuthenticated()) {
-    // Redirigir al login
+    console.log('No autenticado: redirigiendo al login');
     return next({ name: 'login' });
   }
   let queryList = from.query || {};
 
   // Guardar la ruta anterior con su query
-  const savePreviousRoute = (name, query) => {
+  const savePreviousRoute = (name: string) => {
     localStorage.setItem(
       'previousRoute',
       JSON.stringify({
@@ -114,14 +114,12 @@ router.beforeEach((to, from, next) => {
     );
     // console.log('Guardando previousRoute:', name);
   };
-
   if (from.name === 'searchProduct' && to.name === 'productList') {
     savePreviousRoute('searchProduct');
   }
   if (from.name === 'searchProduct' && to.name === 'productDetail') {
     savePreviousRoute('searchProduct');
   }
-  // Cuando vienes de `productList` a `productDetail`, guardamos la query de `productList`
   if (from.name === 'productList' && to.name === 'productDetail') {
     savePreviousRoute('productList');
   }
@@ -143,7 +141,6 @@ router.beforeEach((to, from, next) => {
       savePreviousRoute('searchProduct');
     }
   }
-
   if (from.name === 'productDetail' && to.name === 'productList') {
     savePreviousRoute('searchProduct');
   }
@@ -154,11 +151,10 @@ router.beforeEach((to, from, next) => {
   }
   if (to.name === 'searchProduct') {
     const productListQuery = localStorage.getItem('productListQuery');
-    if (!productListQuery) return;
+    // if (!productListQuery) return;
     localStorage.setItem('productListQuery', JSON.stringify({}));
     // console.log('productListQuery ha sido limpiado');
   }
   next();
 });
-
 export default router;

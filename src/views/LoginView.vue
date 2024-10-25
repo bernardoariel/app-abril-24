@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-screen bg-orangeCustom2">
+  <div class="flex flex-col items-center justify-center h-screen bg-orangeCustom3Translucent">
     <!-- Imagen en la parte superior del formulario -->
     <div class="w-full max-w-xs mb-4">
       <img src="@/assets/img/logo2.png" alt="Login" class="w-50 h-auto mx-auto rounded-lg" />
@@ -19,7 +19,12 @@
         placeholder="Password"
         class="input input-bordered w-full mb-4"
       />
-      <button @click="handleLogin" class="btn btn-primary w-full">Conectarse</button>
+      <button
+        @click="handleLogin"
+        class="w-full bg-orangeCustom text-white py-2 px-4 rounded hover:bg-orangeCustom1"
+      >
+        Conectarse
+      </button>
     </div>
   </div>
 </template>
@@ -32,8 +37,9 @@ import { login } from '../modules/Auth/services/actions';
 
 const router = useRouter();
 // Definir variables reactivas para email y password
-const email = ref('mario@abrilamoblamientos.com.ar');
-const password = ref('appmario125');
+
+const email = ref('mario@abrilamoblamientos.com.ar'); //mario@abrilamoblamientos.com.ar
+const password = ref('appmario125'); //appmario125
 
 // Función para manejar el login
 const handleLogin = async () => {

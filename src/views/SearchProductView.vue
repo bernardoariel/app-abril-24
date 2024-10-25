@@ -19,7 +19,12 @@
               @keydown.enter.prevent="selectProduct"
             />
           </label>
-          <button @click="handleSearch" class="btn btn-primary ml-2 h-12">Buscar</button>
+          <button
+            @click="handleSearch"
+            class="btn bg-orangeCustom hover:bg-orangeCustom2 text-white ml-2 h-12"
+          >
+            Buscar
+          </button>
         </div>
 
         <!-- Dropdown de resultados -->
