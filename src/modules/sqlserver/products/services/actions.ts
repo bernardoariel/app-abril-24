@@ -20,6 +20,21 @@ export const getProducts = async (): Promise<Producto[]> => {
     throw new Error('No se pudieron obtener los productos. Inténtalo de nuevo más tarde.');
   }
 };
+export const getProductsStock = async (): Promise<ProductsStockResponse[]> => {
+  try {
+    const { data } = await abrilApiData.get<ProductsStockResponse[]>(`prod-stock`);
+
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Error al obtener productos:', error.response?.data || error.message);
+    } else {
+      console.error('Error inesperado:', error);
+    }
+    // Puedes lanzar el error o manejarlo según sea necesario
+    throw new Error('No se pudieron obtener los productos. Inténtalo de nuevo más tarde.');
+  }
+};
 
 export const getProductById = async (term: number | string): Promise<Producto> => {
   try {

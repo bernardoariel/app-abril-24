@@ -58,7 +58,8 @@ import { useSucursales } from '../modules/sqlserver/sucursales/composable/useSuc
 import { useFormaPago } from '../modules/sqlserver/forma-pago/composable/useFormaPago';
 import { useMarcas } from '../modules/sqlserver/marcas/composable/useMarcas';
 import { useProducts } from '../modules/sqlserver/products/composable/useProducts';
-
+//import { useProductStock } from '../modules/sqlserver/products/composable/useProductStock';
+// const { productCantidad: productos, isLoading } = useProductStock();
 const { sucursales } = useSucursales();
 const { tarjetas } = useFormaPago();
 const { findMarcasById, marcas } = useMarcas();
