@@ -39,7 +39,10 @@
             @click="handleItemClick(item)"
             :class="{ highlight: selectedIndex === index }"
           >
-            <a>{{ item.name }} - {{ item.CodProducto }}</a>
+            <a
+              >{{ item.name }}
+              <span v-if="item.type === 'product'">- {{ item.CodProducto }}</span></a
+            >
           </li>
         </ul>
       </div>
@@ -58,8 +61,7 @@ import { useSucursales } from '../modules/sqlserver/sucursales/composable/useSuc
 import { useFormaPago } from '../modules/sqlserver/forma-pago/composable/useFormaPago';
 import { useMarcas } from '../modules/sqlserver/marcas/composable/useMarcas';
 import { useProducts } from '../modules/sqlserver/products/composable/useProducts';
-import { useProductStock } from '../modules/sqlserver/products/composable/useProductStock';
-const { productCantidad } = useProductStock();
+
 const { sucursales } = useSucursales();
 const { tarjetas } = useFormaPago();
 const { findMarcasById, marcas } = useMarcas();
@@ -68,7 +70,7 @@ const itemsPerPage = ref(10); // Definir la cantidad de elementos que quieres mo
 const currentPage = ref(1); // Página inicial
 const router = useRouter();
 const searchTerm = ref('');
-// Índice para rastrear la opción seleccionada
+
 const selectedIndex = ref(-1);
 
 const allItems = computed(() => {

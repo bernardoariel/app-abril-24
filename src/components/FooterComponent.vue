@@ -1,5 +1,5 @@
 <template>
-  <footer class="btm-nav h-16 bg-orangeCustom3Translucent">
+  <footer class="btm-nav h-16 bg-orangeCustom4">
     <!-- <router-link to="/home">
       <button>
         <IconWrapper :icon="HomeIcon" :size="sizeIcon" />

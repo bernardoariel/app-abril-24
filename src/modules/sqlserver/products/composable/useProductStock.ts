@@ -19,7 +19,7 @@ export const useProductStock = () => {
   });
 
   const productsQuery = useQuery<ProductsResponse[]>({
-    queryKey: ['productos'],
+    queryKey: ['productos2'],
     queryFn: () => getProducts(),
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 30,
@@ -41,9 +41,11 @@ export const useProductStock = () => {
 
   // Guarda los productos con stock en el store
   watch(productsWithStock, (newProductsWithStock) => {
+    console.log('Productos con stock:', newProductsWithStock);
     store.setProducts(newProductsWithStock);
   });
-
+  stockQuery.data && console.log('Stock Data:', stockQuery.data);
+  productsQuery.data && console.log('Products Data:', productsQuery.data);
   return {
     productsWithStock,
     isLoading: stockQuery.isLoading || productsQuery.isLoading,

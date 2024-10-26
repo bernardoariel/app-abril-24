@@ -7,8 +7,9 @@
       <span class="font-bold text-center text-orangeCustom2"> {{ props.Producto }} </span>
     </div>
     <div role="alert" class="alert mb-5 bg-orange-300 flex justify-between">
-      <span class="font-bold"> Contado y Débito = {{ formatPrice(precioConDescuento) }} </span>
-      <span class="font-bold"> Precio de Lista = {{ formatPrice(props.Precio) }} </span>
+      <span class="font-bold"> Contado = {{ formatPrice(precioContado) }} </span>
+      <span class="font-bold"> Debito = {{ formatPrice(precioDebito) }} </span>
+      <span class="font-bold"> Lista = {{ formatPrice(props.Precio) }} </span>
     </div>
     <div v-for="(group, codTarjeta) in groupedTarjetas" :key="codTarjeta" class="mb-8">
       <div class="collapse collapse-arrow bg-orange-200">
@@ -27,13 +28,13 @@
             </thead>
             <tbody>
               <tr v-for="tarjeta in group" :key="tarjeta.NCuota">
-                <td>{{ tarjeta.NCuota }}</td>
+                <td class="text-gray-800">{{ tarjeta.NCuota }}</td>
                 <!--  <td>{{ tarjeta.Interes }}%</td> -->
                 <!-- Precio por cuota con condición -->
-                <td v-if="tarjeta.NCuota === 1">
+                <td class="text-gray-800" v-if="tarjeta.NCuota === 1">
                   {{ formatPrice(precioLista * (1 + tarjeta.Interes / 100)) }}
                 </td>
-                <td v-else>
+                <td v-else class="text-gray-800">
                   {{
                     formatPrice(
                       (precioLista * (1 + (tarjeta.Interes / 100) * tarjeta.NCuota)) /
@@ -41,7 +42,7 @@
                     )
                   }}
                 </td>
-                <td>
+                <td class="font-bold">
                   {{ formatPrice(calculateTotal(tarjeta)) }}
                 </td>
               </tr>
@@ -84,8 +85,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Precio de lista basado en la prop Precio
 const precioLista = ref(props.Precio);
-const precioConDescuento = computed(() => {
-  return precioLista.value * 0.82; // Aplica el 18% de descuento
+const precioContado = computed(() => {
+  return precioLista.value * 0.82; // 18% de descuento
+});
+const precioDebito = computed(() => {
+  return precioLista.value * 0.9; // 10% de descuento
 });
 // Obtener los datos de forma de pago planes
 const { formaPagoPlanes } = useFormaPagoPlanes();
