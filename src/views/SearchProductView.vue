@@ -14,6 +14,8 @@
               type="text"
               placeholder="Buscar"
               class="grow outline-none h-full pr-10 w-full"
+              @focus="isInputFocused = true"
+              @blur="isInputFocused = false"
               @keydown.down.prevent="handleKeyDown"
               @keydown.up.prevent="handleKeyUp"
               @keydown.enter.prevent="selectProduct"
@@ -47,7 +49,10 @@
         </ul>
       </div>
     </div>
-    <div class="absolute bottom-28 w-full flex justify-center">
+    <div
+      v-if="currentItems.length === 0 && !isInputFocused"
+      class="absolute bottom-28 w-full flex justify-center"
+    >
       <img src="../assets/img/logo.png" alt="imagen" class="w-48 opacity-60 h-auto" />
     </div>
   </div>
@@ -72,7 +77,7 @@ const router = useRouter();
 const searchTerm = ref('');
 
 const selectedIndex = ref(-1);
-
+const isInputFocused = ref(false);
 const allItems = computed(() => {
   const combinedItems = [
     ...productos.value.map((producto) => ({

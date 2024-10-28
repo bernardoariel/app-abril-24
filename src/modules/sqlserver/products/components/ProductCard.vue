@@ -2,6 +2,7 @@
   <div class="card bg-orange-300 shadow-xl p-4 lg:flex lg:flex-row lg:items-center mb-16">
     <figure class="lg:w-1/2 flex justify-center">
       <img
+        v-if="producto.Imagen"
         :src="producto.Imagen ? producto.Imagen.replace(/:8080/, '') : imgDefault"
         alt="Product Image"
         class="w-full h-auto max-h-[300px] object-contain"
@@ -39,7 +40,9 @@ import { formatPrice } from '../../../../common/helpers/formatPrice';
 const { findSucursalById } = useSucursales();
 const { findMarcasById } = useMarcas();
 const producto = defineProps<ProductsResponse>();
-const imgDefault = import.meta.env.VITE_BASE_URL + '/src/assets/img/No_Image_Available.jpg';
+const imgDefault = import.meta.env.VITE_BASE_URL.includes('localhost')
+  ? import.meta.env.VITE_BASE_URL + 'src/assets/img/No_Image_Available.jpg'
+  : 'https://abril.arielbernardo.com/assets/No_Image_Available.jpg';
 
 const sucursalesInfo = producto.Sucursales.map((sucursal) => {
   const nombreSuc = findSucursalById(sucursal.CodSucursal)?.NombreSuc || 'Sucursal desconocida';

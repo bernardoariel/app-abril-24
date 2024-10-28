@@ -38,6 +38,7 @@
             <!-- Imagen del producto -->
             <div class="flex-shrink-0 w-16 h-16 bg-gray-200 rounded-md overflow-hidden mx-5">
               <img
+                v-if="prod.Imagen"
                 :src="prod.Imagen ? prod.Imagen.replace(/:8080/, '') : imgDefault"
                 alt="Imagen del producto"
                 class="w-full h-auto object-cover rounded-md"
@@ -69,5 +70,7 @@ import { useMarcas } from '../../marcas/composable/useMarcas';
 
 const props = defineProps<{ productos: ProductsResponse[] }>();
 const { findMarcasById } = useMarcas();
-const imgDefault = import.meta.env.VITE_BASE_URL + '/src/assets/img/No_Image_Available.jpg';
+const imgDefault = import.meta.env.VITE_BASE_URL.includes('localhost')
+  ? import.meta.env.VITE_BASE_URL + 'src/assets/img/No_Image_Available.jpg'
+  : 'https://abril.arielbernardo.com/assets/No_Image_Available.jpg';
 </script>
