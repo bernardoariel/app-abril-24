@@ -38,8 +38,8 @@ import { login } from '../modules/Auth/services/actions';
 const router = useRouter();
 // Definir variables reactivas para email y password
 
-const email = ref(''); //mario@abrilamoblamientos.com.ar
-const password = ref(''); //appmario125
+const email = ref('mario@abrilamoblamientos.com.ar'); //
+const password = ref('appmario125'); //appmario125
 
 // Función para manejar el login
 const handleLogin = async () => {

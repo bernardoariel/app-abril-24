@@ -19,9 +19,9 @@
       <h2 class="text-center font-semibold bg-orange-500 text-white my-2 px-4 py-2 rounded-lg">
         {{ producto.Stock }} {{ producto.Stock === 1 ? ' Unidad' : ' Unidades' }}
       </h2>
-      <small class="text-blue-950 text-center small-text font-semibold">
+      <h2 class="text-blue-950 text-center font-semibold">
         {{ sucursalesInfo }}
-      </small>
+      </h2>
       <div class="card-actions justify-center">
         <h2 class="text-3xl mt-4 font-bold text-blue-950">
           {{ formatPrice(producto.Precio) }}
