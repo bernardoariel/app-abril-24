@@ -1,76 +1,127 @@
 <template>
-  <div v-for="(prod, index) in productos" :key="prod.CodProducto">
-    <router-link
-      :to="`/product/${prod.CodProducto}`"
-      :class="[
-        'flex flex-col p-4 mb-2 shadow-md hover:shadow-lg rounded-2xl relative transition-transform duration-300 transform hover:-translate-y-1',
-        index % 2 === 0 ? 'bg-white' : 'bg-gray-800 text-white',
-      ]"
-    >
-      <div class="flex items-center justify-between">
-        <div class="flex flex-col w-full">
-          <!-- FILA 1 -->
-          <div class="flex justify-between w-full mb-2">
-            <h3 class="font-medium text-lg badge badge-ghost badge-outline mt-1">
-              {{ prod.CodProducto }}
-            </h3>
+  <div>
+    <!-- Botones de marcas -->
+    <div class="flex flex-wrap mb-4">
+      <button
+        v-for="marca in uniqueMarcas"
+        :key="marca.CodMarca"
+        class="btn mx-1 my-1"
+        :class="{
+          'btn-primary': selectedMarca === marca.CodMarca,
+          'btn-outline': selectedMarca !== marca.CodMarca,
+        }"
+        @click="filterByMarca(marca.CodMarca)"
+      >
+        {{ marca.Marca }}
+        <div class="badge badge-secondary">{{ countProductsByMarca(marca.CodMarca) }}</div>
+      </button>
+    </div>
 
-            <p class="mt-1 text-xs">
-              {{ prod.Medida }}
-            </p>
+    <!-- Lista de productos -->
+    <div v-for="(prod, index) in filteredProducts" :key="prod.CodProducto">
+      <router-link :to="`/product/${prod.CodProducto}`" :class="[...styles(index)]">
+        <!-- CONTENIDO DEL PRODUCTO -->
+        <div class="flex items-center justify-between">
+          <div class="flex flex-col w-full">
+            <!-- FILA 1 -->
+            <div class="flex justify-between w-full mb-2">
+              <h3 class="font-medium text-lg badge badge-ghost badge-outline mt-1">
+                {{ prod.CodProducto }}
+              </h3>
 
-            <h3 class="text-sm leading-none font-medium badge badge-neutral">
-              {{ findMarcasById(prod.CodMarca)?.Marca }}
-            </h3>
-          </div>
-          <!-- FILA 2 -->
-          <div class="flex justify-center w-full">
-            <h3 class="font-medium text-lg text-center">{{ prod.Producto }}</h3>
-          </div>
-          <!-- FILA 3 -->
-          <div class="block w-full mb-1">
-            <h3 class="font-medium text-sm text-center">
-              <small>{{ prod.Descripcion }}</small>
-            </h3>
-          </div>
+              <p class="mt-1 text-xs">
+                {{ prod.Medida }}
+              </p>
 
-          <div class="flex items-center justify-between">
-            <!-- Imagen del producto -->
-            <div class="flex-shrink-0 w-16 h-16 bg-gray-200 rounded-md overflow-hidden mx-5">
-              <img
-                v-if="prod.Imagen"
-                :src="prod.Imagen ? prod.Imagen.replace(/:8080/, '') : imgDefault"
-                alt="Imagen del producto"
-                class="w-full h-auto object-cover rounded-md"
-              />
+              <h3 class="text-sm leading-none font-medium badge badge-neutral">
+                {{ findMarcasById(prod.CodMarca)?.Marca }}
+              </h3>
             </div>
 
-            <!-- Información del producto (al lado derecho) -->
-            <div class="flex flex-col h-full">
-              <div class="flex items-start">
-                <h3 class="text-sm leading-none">{{ prod.Stock }} Unidades</h3>
+            <!-- FILA 2 -->
+            <div class="flex justify-center w-full">
+              <h3 class="font-medium text-lg text-center">{{ prod.Producto }}</h3>
+            </div>
+
+            <!-- FILA 3 -->
+            <div class="block w-full mb-1">
+              <h3 class="font-medium text-sm text-center">
+                <small>{{ prod.Descripcion }}</small>
+              </h3>
+            </div>
+
+            <!-- Detalles -->
+            <div class="flex items-center justify-between">
+              <div class="flex-shrink-0 w-16 h-16 bg-gray-200 rounded-md overflow-hidden mx-5">
+                <img
+                  v-if="prod.Imagen"
+                  :src="prod.Imagen ? prod.Imagen.replace(/:8080/, '') : imgDefault"
+                  alt="Imagen del producto"
+                  class="w-full h-auto object-cover rounded-md"
+                />
               </div>
-              <div class="flex items-center">
-                <h3 class="text-sm leading-none font-semibold">
-                  Precio de Lista: {{ formatPrice(prod.Precio) }}
-                </h3>
+
+              <div class="flex flex-col h-full">
+                <div class="flex items-start">
+                  <h3 class="text-sm leading-none">{{ prod.Stock }} Unidades</h3>
+                </div>
+                <div class="flex items-center">
+                  <h3 class="text-sm leading-none font-semibold">
+                    Precio de Lista: {{ formatPrice(prod.Precio) }}
+                  </h3>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </router-link>
+      </router-link>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue';
 import type { ProductsResponse } from '../interfaces/products.response';
 import { formatPrice } from '../../../../common/helpers/formatPrice';
 import { useMarcas } from '../../marcas/composable/useMarcas';
 
 const props = defineProps<{ productos: ProductsResponse[] }>();
 const { findMarcasById } = useMarcas();
+
 const imgDefault = import.meta.env.VITE_BASE_URL.includes('localhost')
   ? import.meta.env.VITE_BASE_URL + 'src/assets/img/No_Image_Available.jpg'
   : 'https://abril.arielbernardo.com/assets/No_Image_Available.jpg';
+
+// Estado para la marca seleccionada
+const selectedMarca = ref<number | null>(null);
+
+// Propiedad computada para obtener marcas únicas
+const uniqueMarcas = computed(() => {
+  const marcas = props.productos.map((prod) => findMarcasById(prod.CodMarca));
+  return [...new Map(marcas.filter(Boolean).map((marca) => [marca.CodMarca, marca])).values()];
+});
+
+// Propiedad computada para filtrar productos
+const filteredProducts = computed(() => {
+  if (selectedMarca.value === null) {
+    return props.productos;
+  }
+  return props.productos.filter((prod) => prod.CodMarca === selectedMarca.value);
+});
+
+// Función para seleccionar una marca
+const filterByMarca = (CodMarca: number) => {
+  selectedMarca.value = selectedMarca.value === CodMarca ? null : CodMarca; // Deseleccionar si ya está seleccionada
+};
+
+// Función para contar productos por marca
+const countProductsByMarca = (CodMarca: number) => {
+  return props.productos.filter((prod) => prod.CodMarca === CodMarca).length;
+};
+
+// Clase dinámica para estilos
+const styles = (index: number) => [
+  'flex flex-col p-4 mb-2 shadow-md hover:shadow-lg rounded-2xl relative transition-transform duration-300 transform hover:-translate-y-1',
+  index % 2 === 0 ? 'bg-white' : 'bg-gray-800 text-white',
+];
 </script>
