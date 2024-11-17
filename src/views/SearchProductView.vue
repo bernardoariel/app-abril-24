@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 import { useSucursales } from '../modules/sqlserver/sucursales/composable/useSucursales';
 import { useFormaPago } from '../modules/sqlserver/forma-pago/composable/useFormaPago';
@@ -75,9 +75,19 @@ const itemsPerPage = ref(10); // Definir la cantidad de elementos que quieres mo
 const currentPage = ref(1); // Página inicial
 const router = useRouter();
 const searchTerm = ref('');
-
+const route = useRoute();
 const selectedIndex = ref(-1);
 const isInputFocused = ref(false);
+const searchInput = ref(null);
+onMounted(() => {
+  const search = route.query.search || ''; // Obtén el término de búsqueda
+  const marca = route.query.marca || ''; // Obtén la marca
+  const descripcion = route.query.descripcion || ''; // Obtén la descripción
+
+  // Une los términos en una cadena separada por comas
+  searchTerm.value = [search, marca, descripcion].filter(Boolean).join(',');
+  searchInput.value?.focus();
+});
 const allItems = computed(() => {
   const combinedItems = [
     ...productos.value.map((producto) => ({
@@ -150,23 +160,51 @@ const handleSearch = async () => {
 
   if (isNumber) {
     // Redirige directamente al detalle del producto usando el código como ID
-    router.replace({
-      name: 'productDetail',
-      params: { id: term },
-    });
-  } else {
-    // Procesa términos separados por comas y espacios
-    const terms = term.split(',').map((t) => t.trim());
-    const primaryTerm = terms[0]; // Enviar solo el término principal al backend
-    const selectedMarca = terms[1] || ''; // Marca seleccionada (opcional)
+    router.replace(`/product/${term}`);
+    return;
+  }
 
-    // Redirige al listado de productos
+  // Procesa términos separados por comas
+  const terms = term.split(',').map((t) => t.trim());
+
+  if (terms.length === 1) {
+    // Si no hay comas, redirige a la búsqueda general
     router.replace({
       name: 'productList',
-      query: { search: primaryTerm, marca: selectedMarca },
+      query: { search: terms[0] },
+    });
+  } else if (terms.length === 2) {
+    // Si hay una coma, redirige con búsqueda por marca
+    router.replace({
+      name: 'productList',
+      query: { search: terms[0], marca: terms[1] },
+    });
+  } else if (terms.length >= 3) {
+    // Si hay tres términos, incluye la descripción
+    router.replace({
+      name: 'productList',
+      query: {
+        search: terms[0],
+        marca: terms[1],
+        descripcion: terms[2],
+      },
     });
   }
 };
+const updateSearchTermFromUrl = () => {
+  const search = route.query.search || '';
+  const marca = route.query.marca || '';
+  const descripcion = route.query.descripcion || '';
+
+  searchTerm.value = [search, marca, descripcion].filter(Boolean).join(',');
+};
+watch(
+  () => route.query,
+  () => {
+    updateSearchTermFromUrl();
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>

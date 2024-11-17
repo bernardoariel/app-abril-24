@@ -71,7 +71,7 @@
                   </h3>
                 </div>
                 <div class="flex items-end">
-                  <h3 class="text-sm leading-none">{{ prod.Medida }} Unidades</h3>
+                  <h3 class="text-sm leading-none">{{ prod.Medida }}</h3>
                 </div>
               </div>
             </div>
@@ -100,7 +100,7 @@ const imgDefault = import.meta.env.VITE_BASE_URL.includes('localhost')
 
 // Estado para la marca seleccionada
 const selectedMarca = ref<number | null>(null);
-
+const selectedDescripcion = ref<string | null>(null);
 // Propiedad computada para obtener marcas únicas
 const uniqueMarcas = computed(() => {
   const marcasList = props.productos.map((prod) => findMarcasById(prod.CodMarca));
@@ -109,10 +109,13 @@ const uniqueMarcas = computed(() => {
 
 // Propiedad computada para filtrar productos
 const filteredProducts = computed(() => {
-  if (!selectedMarca.value) {
-    return props.productos;
-  }
-  return props.productos.filter((prod) => prod.CodMarca === selectedMarca.value);
+  return props.productos.filter((prod) => {
+    const matchesMarca = !selectedMarca.value || prod.CodMarca === selectedMarca.value;
+    const matchesDescripcion =
+      !selectedDescripcion.value ||
+      prod.Medida.toLowerCase().includes(selectedDescripcion.value.toLowerCase());
+    return matchesMarca && matchesDescripcion;
+  });
 });
 
 // Función para seleccionar una marca
@@ -128,9 +131,29 @@ const filterByMarca = (CodMarca: number) => {
   });
 };
 
+// Función para filtrar por descripción
+const filterByDescripcion = (descripcion: string) => {
+  selectedDescripcion.value = descripcion || null;
+
+  // Actualizamos la URL con la descripción seleccionada
+  router.replace({
+    query: {
+      ...route.query,
+      descripcion: selectedDescripcion.value || undefined,
+    },
+  });
+};
+
 // Función para contar productos por marca
 const countProductsByMarca = (CodMarca: number) => {
-  return props.productos.filter((prod) => prod.CodMarca === CodMarca).length;
+  return props.productos.filter((prod) => {
+    const matchesMarca = prod.CodMarca === CodMarca;
+    const matchesDescripcion =
+      !selectedDescripcion.value || // Si no hay descripción seleccionada, no filtra
+      prod.Medida.toLowerCase().includes(selectedDescripcion.value.toLowerCase());
+
+    return matchesMarca && matchesDescripcion; // Devuelve true solo si ambas condiciones se cumplen
+  }).length;
 };
 
 // Clase dinámica para estilos
@@ -141,11 +164,18 @@ const styles = (index: number) => [
 
 // Actualiza el selectedMarca basado en un término parcial
 onMounted(() => {
+  // Manejar marca desde la URL
   if (marcaQuery.value) {
     const match = uniqueMarcas.value.find((marca) =>
       marca.Marca.toLowerCase().includes(marcaQuery.value.toLowerCase()),
     );
     selectedMarca.value = match?.CodMarca || null; // Asigna el CodMarca de la coincidencia parcial
+  }
+
+  // Manejar descripción desde la URL
+  const descripcionQuery = route.query.descripcion || '';
+  if (descripcionQuery) {
+    selectedDescripcion.value = descripcionQuery as string;
   }
 });
 </script>
