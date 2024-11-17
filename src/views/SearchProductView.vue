@@ -144,12 +144,27 @@ const selectProduct = () => {
 const handleSearch = async () => {
   const term = searchTerm.value.trim();
   if (!term) return;
+
+  // Verifica si es un número
   const isNumber = !isNaN(Number(term));
 
   if (isNumber) {
-    router.replace(`/product/${term}`);
+    // Redirige directamente al detalle del producto usando el código como ID
+    router.replace({
+      name: 'productDetail',
+      params: { id: term },
+    });
   } else {
-    router.replace({ name: 'productList', query: { search: term } });
+    // Procesa términos separados por comas y espacios
+    const terms = term.split(',').map((t) => t.trim());
+    const primaryTerm = terms[0]; // Enviar solo el término principal al backend
+    const selectedMarca = terms[1] || ''; // Marca seleccionada (opcional)
+
+    // Redirige al listado de productos
+    router.replace({
+      name: 'productList',
+      query: { search: primaryTerm, marca: selectedMarca },
+    });
   }
 };
 </script>

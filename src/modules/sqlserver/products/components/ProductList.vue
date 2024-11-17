@@ -70,6 +70,9 @@
                     Precio de Lista: {{ formatPrice(prod.Precio) }}
                   </h3>
                 </div>
+                <div class="flex items-end">
+                  <h3 class="text-sm leading-none">{{ prod.Medida }} Unidades</h3>
+                </div>
               </div>
             </div>
           </div>
@@ -80,14 +83,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import type { ProductsResponse } from '../interfaces/products.response';
 import { formatPrice } from '../../../../common/helpers/formatPrice';
 import { useMarcas } from '../../marcas/composable/useMarcas';
+import { useRoute, useRouter } from 'vue-router';
 
 const props = defineProps<{ productos: ProductsResponse[] }>();
-const { findMarcasById } = useMarcas();
-
+const { findMarcasById, marcas } = useMarcas(); // Accedemos a las marcas desde TanStack Query
+const route = useRoute();
+const router = useRouter();
+const marcaQuery = computed(() => route.query.marca || '');
 const imgDefault = import.meta.env.VITE_BASE_URL.includes('localhost')
   ? import.meta.env.VITE_BASE_URL + 'src/assets/img/No_Image_Available.jpg'
   : 'https://abril.arielbernardo.com/assets/No_Image_Available.jpg';
@@ -97,13 +103,13 @@ const selectedMarca = ref<number | null>(null);
 
 // Propiedad computada para obtener marcas únicas
 const uniqueMarcas = computed(() => {
-  const marcas = props.productos.map((prod) => findMarcasById(prod.CodMarca));
-  return [...new Map(marcas.filter(Boolean).map((marca) => [marca.CodMarca, marca])).values()];
+  const marcasList = props.productos.map((prod) => findMarcasById(prod.CodMarca));
+  return [...new Map(marcasList.filter(Boolean).map((marca) => [marca.CodMarca, marca])).values()];
 });
 
 // Propiedad computada para filtrar productos
 const filteredProducts = computed(() => {
-  if (selectedMarca.value === null) {
+  if (!selectedMarca.value) {
     return props.productos;
   }
   return props.productos.filter((prod) => prod.CodMarca === selectedMarca.value);
@@ -111,7 +117,15 @@ const filteredProducts = computed(() => {
 
 // Función para seleccionar una marca
 const filterByMarca = (CodMarca: number) => {
-  selectedMarca.value = selectedMarca.value === CodMarca ? null : CodMarca; // Deseleccionar si ya está seleccionada
+  selectedMarca.value = selectedMarca.value === CodMarca ? null : CodMarca;
+
+  // Actualizamos la URL con la marca seleccionada
+  router.replace({
+    query: {
+      ...route.query,
+      marca: selectedMarca.value ? findMarcasById(selectedMarca.value)?.Marca : undefined,
+    },
+  });
 };
 
 // Función para contar productos por marca
@@ -124,4 +138,14 @@ const styles = (index: number) => [
   'flex flex-col p-4 mb-2 shadow-md hover:shadow-lg rounded-2xl relative transition-transform duration-300 transform hover:-translate-y-1',
   index % 2 === 0 ? 'bg-white' : 'bg-gray-800 text-white',
 ];
+
+// Actualiza el selectedMarca basado en un término parcial
+onMounted(() => {
+  if (marcaQuery.value) {
+    const match = uniqueMarcas.value.find((marca) =>
+      marca.Marca.toLowerCase().includes(marcaQuery.value.toLowerCase()),
+    );
+    selectedMarca.value = match?.CodMarca || null; // Asigna el CodMarca de la coincidencia parcial
+  }
+});
 </script>
