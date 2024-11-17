@@ -8,6 +8,7 @@ import ProductView from '@/views/ProductView.vue';
 import ProductPrice from '@/views/ProductPrice.vue';
 import DefaultLayout from '@/layouts/DefaultLayout.vue';
 
+// Función para decodificar un JWT
 export function parseJwt(token: string) {
   try {
     const base64Url = token.split('.')[1];
@@ -27,21 +28,24 @@ export function parseJwt(token: string) {
   }
 }
 
+// Función para verificar si el usuario está autenticado
 function isAuthenticated() {
   const token = localStorage.getItem('authToken');
   if (!token) {
-    return false; // No hay token, por lo tanto no está autenticado
+    return false; // No hay token, el usuario no está autenticado
   }
 
   try {
-    const decodedToken: any = parseJwt(token); // Usar la función manual para decodificar el token
-    const currentTime = Date.now() / 1000; // Obtener el tiempo actual en segundos
-    return decodedToken && decodedToken.exp > currentTime; // Verificar que el token no haya expirado
+    const decodedToken: any = parseJwt(token); // Decodifica el token
+    const currentTime = Date.now() / 1000; // Tiempo actual en segundos
+    return decodedToken && decodedToken.exp > currentTime; // Verifica si el token está vigente
   } catch (error) {
     console.error('Error al decodificar el token:', error);
-    return false; // El token es inválido o está corrupto
+    return false; // El token es inválido o corrupto
   }
 }
+
+// Definición de las rutas
 const routes = [
   {
     path: '/login',
@@ -90,71 +94,57 @@ const routes = [
   },
 ];
 
+// Creación del router
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
+
+// Middleware de navegación
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
 
-  // Si la ruta requiere autenticación y el usuario no está autenticado
+  // Redirigir al login si la ruta requiere autenticación y el usuario no está autenticado
   if (requiresAuth && !isAuthenticated()) {
     console.log('No autenticado: redirigiendo al login');
     return next({ name: 'login' });
   }
-  let queryList = from.query || {};
 
   // Guardar la ruta anterior con su query
   const savePreviousRoute = (name: string) => {
-    localStorage.setItem(
-      'previousRoute',
-      JSON.stringify({
-        name, // Verificar que la query no esté vacía
-      }),
-    );
-    // console.log('Guardando previousRoute:', name);
+    localStorage.setItem('previousRoute', JSON.stringify({ name }));
   };
+
+  // Guardar rutas anteriores basadas en la navegación
   if (from.name === 'searchProduct' && to.name === 'productList') {
-    savePreviousRoute('searchProduct');
-  }
-  if (from.name === 'searchProduct' && to.name === 'productDetail') {
     savePreviousRoute('searchProduct');
   }
   if (from.name === 'productList' && to.name === 'productDetail') {
     savePreviousRoute('productList');
   }
-
-  // Cuando vienes de `productDetail` a `productPrice`
   if (from.name === 'productDetail' && to.name === 'productPrice') {
     savePreviousRoute('productDetail');
   }
 
-  // Cuando vuelves de `productPrice` a `productDetail`
-  if (from.name === 'productPrice' && to.name === 'productDetail') {
-    const productListQuery = localStorage.getItem('productListQuery');
-
-    if (productListQuery && Object.keys(JSON.parse(productListQuery)).length > 0) {
-      // Si `productListQuery` tiene datos, guardamos la ruta anterior como `productList`
-      savePreviousRoute('productList');
-    } else {
-      // Si `productListQuery` está vacío o es null, volvemos a `searchProduct`
-      savePreviousRoute('searchProduct');
-    }
-  }
-  if (from.name === 'productDetail' && to.name === 'productList') {
-    savePreviousRoute('searchProduct');
-  }
-
+  // Manejar resultados vacíos
   if (to.name === 'productList' && Object.keys(to.query).length > 0) {
+    const noResults = to.query.noResults === 'true'; // Verifica si la búsqueda no tiene resultados
+
+    if (noResults) {
+      console.log('No se encontraron resultados, redirigiendo a una vista de resultados vacíos');
+      return next({ name: 'notFound', query: { message: 'No se encontraron resultados.' } });
+    }
+
+    // Guarda el estado de las queries en localStorage
     localStorage.setItem('productListQuery', JSON.stringify(to.query));
-    // console.log('productListQuery guardado:', to.query);
   }
+
+  // Limpia queries al ir a `searchProduct`
   if (to.name === 'searchProduct') {
-    const productListQuery = localStorage.getItem('productListQuery');
-    // if (!productListQuery) return;
     localStorage.setItem('productListQuery', JSON.stringify({}));
-    // console.log('productListQuery ha sido limpiado');
   }
-  next();
+
+  next(); // Permitir la navegación
 });
+
 export default router;
