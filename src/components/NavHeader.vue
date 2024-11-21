@@ -51,6 +51,10 @@ const goBack = () => {
     const productListQuery = productListQueryData ? JSON.parse(productListQueryData) : null;
 
     if (previousRoute.name === 'productList' && productListQuery) {
+      if (route.name === 'productList') {
+        router.replace({ name: 'searchProduct', query: productListQuery });
+        return;
+      }
       router.replace({ name: previousRoute.name, query: productListQuery });
     } else if (productListQuery && Object.keys(productListQuery).length >= 2) {
       router.replace({ name: previousRoute.name, query: productListQuery });

@@ -125,6 +125,13 @@ router.beforeEach((to, from, next) => {
   if (from.name === 'productDetail' && to.name === 'productPrice') {
     savePreviousRoute('productDetail');
   }
+  if (from.name === 'productPrice' && to.name === 'productDetail') {
+    if (Object.keys(to.query).length > 0) {
+      savePreviousRoute('productList');
+    } else {
+      savePreviousRoute('searchProduct');
+    }
+  }
 
   // Manejar resultados vacíos
   if (to.name === 'productList' && Object.keys(to.query).length > 0) {
