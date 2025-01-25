@@ -39,8 +39,8 @@ import { useAuthStore } from '../store/useAuth';
 const router = useRouter();
 // Definir variables reactivas para email y password
 const authStore = useAuthStore();
-const email = ref('mario@abrilamoblamientos.com.ar'); //
-const password = ref('appmario125'); //appmario125
+const email = ref(''); //mario@abrilamoblamientos.com.ar
+const password = ref(''); //appmario125
 
 // Función para manejar el login
 const handleLogin = async () => {
