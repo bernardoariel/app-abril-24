@@ -33,3 +33,15 @@ export const refreshToken = async (refreshToken: string | null) => {
     throw error;
   }
 };
+export const ejecutarTarea = async () => {
+  try {
+    // Hacer una solicitud POST al endpoint
+    const response = await abrilApiData.post('/tareas/ejecutar');
+
+    // Devolver la respuesta
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error al ejecutar la tarea:', error);
+    return { success: false, error: error.response?.data || 'Error desconocido' };
+  }
+};

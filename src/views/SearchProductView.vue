@@ -71,6 +71,7 @@ const { sucursales } = useSucursales();
 const { tarjetas } = useFormaPago();
 const { findMarcasById, marcas } = useMarcas();
 const { productos, isLoading } = useProducts();
+
 const itemsPerPage = ref(10); // Definir la cantidad de elementos que quieres mostrar por página
 const currentPage = ref(1); // Página inicial
 const router = useRouter();

@@ -9,6 +9,7 @@ interface GetProductsOptions {
 export const getProducts = async (): Promise<Producto[]> => {
   try {
     const { data } = await abrilApiData.get<Producto[]>(`productos`);
+    console.log('data::: ', data);
     return data.result;
   } catch (error) {
     if (axios.isAxiosError(error)) {

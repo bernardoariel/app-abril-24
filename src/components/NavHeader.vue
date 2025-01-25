@@ -13,15 +13,24 @@
     </button>
 
     <h1 class="text-xl font-bold text-center flex-grow">{{ title }}</h1>
+    <button v-if="isAdmin" @click="handleTaskExecution" class="btn btn-primary">
+      Actualizar Credenciales
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from '../store/useAuth';
+import { ejecutarTarea } from '../modules/Auth/services/actions';
 
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
+
+const administradoresEmails = ['mario@abrilamoblamientos.com.ar'];
+const isAdmin = computed(() => administradoresEmails.includes(authStore.user));
 
 const showBackButton = computed(() => {
   return !['login', 'searchProduct'].includes(route.name as string);
@@ -35,7 +44,17 @@ const hasQueries = computed(() => {
   const { search, marca, descripcion } = route.query;
   return Boolean(search || marca || descripcion);
 });
+const handleTaskExecution = async () => {
+  const result = await ejecutarTarea();
 
+  if (result.success) {
+    console.log('Tarea ejecutada exitosamente:', result.data);
+    alert('Tarea ejecutada exitosamente.');
+  } else {
+    console.error('Error al ejecutar la tarea:', result.error);
+    alert('Error al ejecutar la tarea.');
+  }
+};
 // Función para ir atrás
 const goBack = () => {
   const previousRouteData = localStorage.getItem('previousRoute');

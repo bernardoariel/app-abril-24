@@ -34,10 +34,11 @@ import { ref } from 'vue';
 import { abrilApiData } from '@/api/abrilApiData';
 import { useRouter } from 'vue-router';
 import { login } from '../modules/Auth/services/actions';
+import { useAuthStore } from '../store/useAuth';
 
 const router = useRouter();
 // Definir variables reactivas para email y password
-
+const authStore = useAuthStore();
 const email = ref('mario@abrilamoblamientos.com.ar'); //
 const password = ref('appmario125'); //appmario125
 
@@ -46,7 +47,7 @@ const handleLogin = async () => {
   const result = await login(email.value, password.value); // Usar la función login desde actions.ts
 
   if (result.success) {
-    // console.log('Login exitoso:', result.data);
+    authStore.setUser(email.value);
     router.push({ name: 'searchProduct' }); // Redirigir después del login
   } else {
     console.error('Error al iniciar sesión:', result.error);
