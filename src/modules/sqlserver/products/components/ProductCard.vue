@@ -6,10 +6,10 @@
         :src="producto.Imagen ? producto.Imagen.replace(/:8080/, '') : imgDefault"
         alt="Product Image"
         class="w-full h-auto max-h-[300px] object-contain cursor-pointer"
-        @click="openModal"
+        @click.stop.prevent="openModal"
       />
     </figure>
-    <div class="card-body lg:w-1/2 lg:pl-8">
+    <router-link :to="`/product/${producto.CodProducto}/price`" class="card-body lg:w-1/2 lg:pl-8">
       <h1 class="text-center text-2xl font-bold text-blue-950">{{ producto.CodProducto }}</h1>
       <h2 class="card-title text-center mt-2">{{ producto.Producto }}</h2>
       <p class="text-center">{{ producto.Descripcion }}</p>
@@ -28,11 +28,11 @@
           {{ formatPrice(producto.Precio) }}
         </h2>
       </div>
-    </div>
+    </router-link>
     <div
       v-if="showModal"
-      class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-75 z-50"
-      @click="closeModal"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+      @click.stop.prevent="closeModal"
     >
       <img
         :src="producto.Imagen.replace(/:8080/, '')"
@@ -45,11 +45,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import type { ProductsResponse } from '../interfaces/products.response';
 import { useSucursales } from '../../sucursales/composable/useSucursales';
 import { useMarcas } from '../../marcas/composable/useMarcas';
 import { formatPrice } from '../../../../common/helpers/formatPrice';
-import { ref } from 'vue';
 
 const { findSucursalById } = useSucursales();
 const { findMarcasById } = useMarcas();
@@ -75,6 +75,16 @@ const closeModal = () => {
 </script>
 
 <style scoped>
+/* Transición suave del modal */
+/* Transición suave */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 .small-text {
   font-size: 0.6rem;
 }

@@ -5,12 +5,9 @@
         <LoaderComponent v-bind="ConfigLoader" />
       </div>
       <ErrorComponent v-if="isError && !isLoading" />
-      <router-link
-        v-else-if="!isLoading && !isError && producto"
-        :to="`/product/${params.id}/price`"
-      >
+      <div v-else-if="!isLoading && !isError && producto">
         <ProductCard v-bind="producto" />
-      </router-link>
+      </div>
     </div>
   </div>
 </template>
