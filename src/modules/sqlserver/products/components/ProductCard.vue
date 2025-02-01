@@ -6,7 +6,7 @@
         :src="producto.Imagen ? producto.Imagen.replace(/:8080/, '') : imgDefault"
         alt="Product Image"
         class="w-full h-auto max-h-[300px] object-contain cursor-pointer"
-        @click.stop.prevent="openModal"
+        @click="openModal"
       />
     </figure>
     <div class="card-body lg:w-1/2 lg:pl-8">
