@@ -29,17 +29,27 @@
         </h2>
       </div>
     </router-link>
+
+    <!-- MODAL DE IMAGEN EN PANTALLA COMPLETA -->
     <div
       v-if="showModal"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
       @click.stop.prevent="closeModal"
     >
+      <!-- IMAGEN CON ZOOM -->
       <img
         :src="producto.Imagen.replace(/:8080/, '')"
         alt="Product Image"
-        class="max-w-[90%] max-h-[90%] object-contain"
+        class="max-w-[90%] max-h-[90%] object-contain cursor-pointer"
+        :style="{ transform: `scale(${zoomLevel})` }"
         @click.stop
       />
+
+      <!-- BOTONES DE ZOOM - FIJOS EN LA PANTALLA -->
+      <div class="zoom-controls">
+        <button class="zoom-btn" @click.stop="zoomIn">+</button>
+        <button class="zoom-btn" @click.stop="zoomOut">-</button>
+      </div>
     </div>
   </div>
 </template>
@@ -54,6 +64,7 @@ import { formatPrice } from '../../../../common/helpers/formatPrice';
 const { findSucursalById } = useSucursales();
 const { findMarcasById } = useMarcas();
 const producto = defineProps<ProductsResponse>();
+
 const imgDefault = import.meta.env.VITE_BASE_URL.includes('localhost')
   ? import.meta.env.VITE_BASE_URL + 'src/assets/img/No_Image_Available.jpg'
   : 'https://abril.arielbernardo.com/assets/No_Image_Available.jpg';
@@ -64,19 +75,28 @@ const sucursalesInfo = producto.Sucursales.map((sucursal) => {
 }).join(', ');
 
 const showModal = ref(false);
+const zoomLevel = ref(1); // Nivel de zoom inicial
 
 // Funciones para abrir y cerrar modal
 const openModal = () => {
   showModal.value = true;
+  zoomLevel.value = 1; // Resetear el zoom al abrir el modal
 };
 const closeModal = () => {
   showModal.value = false;
+};
+
+// Funciones para aumentar y disminuir zoom
+const zoomIn = () => {
+  if (zoomLevel.value < 3) zoomLevel.value += 0.2; // Aumenta el zoom hasta un máximo de 3x
+};
+const zoomOut = () => {
+  if (zoomLevel.value > 1) zoomLevel.value -= 0.2; // Reduce el zoom hasta el tamaño normal (1x)
 };
 </script>
 
 <style scoped>
 /* Transición suave del modal */
-/* Transición suave */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease-in-out;
@@ -85,13 +105,35 @@ const closeModal = () => {
 .fade-leave-to {
   opacity: 0;
 }
-.small-text {
-  font-size: 0.6rem;
+
+/* Estilos de los botones de zoom */
+.zoom-controls {
+  position: fixed; /* Fijado en la pantalla */
+  bottom: 20px; /* Posición en la parte inferior */
+  right: 30px; /* Pegado a la derecha */
+  display: flex;
+  gap: 10px;
+  z-index: 100;
 }
-.product-image {
-  width: 100%;
-  height: auto;
-  max-width: 300px; /* Puedes ajustar este valor para limitar el tamaño máximo */
-  object-fit: contain; /* Asegura que la imagen se ajuste bien dentro del contenedor */
+
+.zoom-btn {
+  background-color: white;
+  color: black;
+  font-size: 1.5rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.zoom-btn:hover {
+  background-color: gray;
+  color: white;
 }
 </style>

@@ -15,10 +15,10 @@
     <h1 class="text-xl font-bold text-center flex-grow">{{ title }}</h1>
 
     <!-- Botón de Elipsis con Dropdown -->
-    <div class="relative inline-block text-left">
+    <div class="relative inline-block text-left" ref="dropdownRef">
       <button
         @click="toggleDropdown"
-        class="flex items-center justify-center w-10 h-10 bg-orange-600 text-white rounded-full hover:bg-orange-700 focus:outline-none"
+        class="flex items-center justify-center w-10 h-10 text-orange-600 rounded-full hover:bg-orange-100 focus:outline-none"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../store/useAuth';
 import { ejecutarTarea } from '../modules/Auth/services/actions';
@@ -72,14 +72,18 @@ const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 
-// Estado del dropdown
 const isDropdownOpen = ref(false);
+const dropdownRef = ref<HTMLElement | null>(null); // 🔹 NUEVO: Referencia al dropdown
 
 // Función para alternar el dropdown
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
-
+const closeDropdownOnClickOutside = (event: Event) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
+    isDropdownOpen.value = false;
+  }
+};
 // Lista de emails de administradores
 const administradoresEmails = ['mario@abrilamoblamientos.com.ar'];
 const isAdmin = computed(() => administradoresEmails.includes(authStore.user));
@@ -154,6 +158,13 @@ const goBack = () => {
     router.replace({ name: 'searchProduct' });
   }
 };
+onMounted(() => {
+  document.addEventListener('click', closeDropdownOnClickOutside); // 🔹 Se activa al montar el componente
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', closeDropdownOnClickOutside); // 🔹 Se limpia al desmontar el componente
+});
 
 // Función para limpiar las queries
 const clearQuery = () => {
