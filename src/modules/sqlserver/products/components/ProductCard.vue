@@ -5,7 +5,8 @@
         v-if="producto.Imagen"
         :src="producto.Imagen ? producto.Imagen.replace(/:8080/, '') : imgDefault"
         alt="Product Image"
-        class="w-full h-auto max-h-[300px] object-contain"
+        class="w-full h-auto max-h-[300px] object-contain cursor-pointer"
+        @click.stop.prevent="openModal"
       />
     </figure>
     <div class="card-body lg:w-1/2 lg:pl-8">
@@ -28,6 +29,18 @@
         </h2>
       </div>
     </div>
+    <div
+      v-if="showModal"
+      class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-75 z-50"
+      @click="closeModal"
+    >
+      <img
+        :src="producto.Imagen.replace(/:8080/, '')"
+        alt="Product Image"
+        class="max-w-[90%] max-h-[90%] object-contain"
+        @click.stop
+      />
+    </div>
   </div>
 </template>
 
@@ -36,6 +49,7 @@ import type { ProductsResponse } from '../interfaces/products.response';
 import { useSucursales } from '../../sucursales/composable/useSucursales';
 import { useMarcas } from '../../marcas/composable/useMarcas';
 import { formatPrice } from '../../../../common/helpers/formatPrice';
+import { ref } from 'vue';
 
 const { findSucursalById } = useSucursales();
 const { findMarcasById } = useMarcas();
@@ -48,6 +62,16 @@ const sucursalesInfo = producto.Sucursales.map((sucursal) => {
   const nombreSuc = findSucursalById(sucursal.CodSucursal)?.NombreSuc || 'Sucursal desconocida';
   return `${nombreSuc} (${sucursal.Cantidad})`;
 }).join(', ');
+
+const showModal = ref(false);
+
+// Funciones para abrir y cerrar modal
+const openModal = () => {
+  showModal.value = true;
+};
+const closeModal = () => {
+  showModal.value = false;
+};
 </script>
 
 <style scoped>
