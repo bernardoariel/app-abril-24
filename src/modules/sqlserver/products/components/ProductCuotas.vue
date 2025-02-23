@@ -104,7 +104,16 @@ const groupedTarjetas = computed(() => {
       if (!acc[tarjeta.CodForPago]) {
         acc[tarjeta.CodForPago] = [];
       }
-      acc[tarjeta.CodForPago].push(tarjeta);
+
+      // Filtrar cuotas solo si CodForPago es "CRE"
+      if (tarjeta.CodForPago === 'CRE') {
+        const cuotasPermitidas = [1, 3, 6, 12, 15, 18];
+        if (cuotasPermitidas.includes(tarjeta.NCuota)) {
+          acc[tarjeta.CodForPago].push(tarjeta);
+        }
+      } else {
+        acc[tarjeta.CodForPago].push(tarjeta);
+      }
     }
     return acc;
   }, {});
