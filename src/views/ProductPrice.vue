@@ -12,11 +12,11 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import ProductCuotas from '@/modules/sqlserver/products/components/ProductCuotas.vue';
-import LoaderComponent from '@/common/components/LoaderComponent.vue';
-import ErrorComponent from './ErrorComponent.vue';
-import { useProduct } from '@/modules/sqlserver/products/composable/useProduct';
+import { useRoute } from "vue-router";
+import ProductCuotas from "@/modules/sqlserver/products/components/ProductCuotas.vue";
+import LoaderComponent from "@/common/components/LoaderComponent.vue";
+import ErrorComponent from "./ErrorComponent.vue";
+import { useProduct } from "@/modules/sqlserver/products/composable/useProduct";
 
 const { params } = useRoute();
 
@@ -26,7 +26,7 @@ interface AttrLoader {
 }
 const ConfigLoader: AttrLoader = {
   size: 80,
-  color: '#000',
+  color: "#000",
 };
 
 const { producto, isLoading, isError } = useProduct({ id: +params.id });

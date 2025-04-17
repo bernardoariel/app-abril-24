@@ -29,6 +29,7 @@
           <table class="table w-full text-center">
             <thead>
               <tr>
+                <th stu>#</th>
                 <th stu>Cuotas</th>
                 <th stu>Importe Cuota</th>
                 <th stu>Total</th>
@@ -36,6 +37,13 @@
             </thead>
             <tbody>
               <tr v-for="tarjeta in group" :key="tarjeta.NCuota">
+                <td class="text-gray-800">
+                  <input
+                    type="checkbox"
+                    v-model="checkedMap[codTarjeta][tarjeta.NCuota]"
+                    class="checkbox checkbox-warning"
+                  />
+                </td>
                 <td class="text-gray-800">{{ tarjeta.NCuota }}</td>
                 <!--  <td>{{ tarjeta.Interes }}%</td> -->
                 <!-- Precio por cuota con condición -->
@@ -63,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 import { formatPrice } from "../../../../common/helpers/formatPrice";
@@ -72,7 +80,9 @@ import { useFormaPago } from "../../forma-pago/composable/useFormaPago";
 import { useMarcas } from "../../marcas/composable/useMarcas";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+const checkedMap = ref<Record<string, Record<number, boolean>>>({});
 
+import { watchEffect } from "vue";
 // Definir las props
 interface Props {
   CodProducto: string;
@@ -96,6 +106,9 @@ const ConfigLoader: AttrLoader = {
 const props = withDefaults(defineProps<Props>(), {
   Imagen: "",
 });
+const cuotasTNA = computed(() =>
+  formaPagoPlanes.value.filter((fp) => fp.CodForPago === "TNA")
+);
 
 // Precio de lista basado en la prop Precio
 const precioLista = ref(props.Precio);
@@ -107,6 +120,7 @@ const precioDebito = computed(() => {
 });
 // Obtener los datos de forma de pago planes
 const { formaPagoPlanes } = useFormaPagoPlanes();
+console.log("formaPagoPlanes::: ", formaPagoPlanes.value);
 const { findFormaPagoById } = useFormaPago();
 const { findMarcasById } = useMarcas();
 const arrayCreditos = ["CRE", "TNA", "TNP", "TVI"]; // Códigos de crédito
@@ -115,6 +129,36 @@ const mostrarContenido = ref(true);
 const exportToPDF = () => {
   const doc = new jsPDF();
   let y = 20;
+
+  // 📌 MOVER ESTE BLOQUE DENTRO DE LA FUNCIÓN
+  const cuotasSeleccionadas: {
+    codTarjeta: string;
+    NCuota: number;
+    FormaPago: string;
+    cuota: number;
+    total: number;
+  }[] = [];
+
+  for (const [codTarjeta, cuotasPorTarjeta] of Object.entries(checkedMap.value)) {
+    for (const [NCuotaStr, isChecked] of Object.entries(cuotasPorTarjeta)) {
+      const NCuota = parseInt(NCuotaStr);
+      if (isChecked) {
+        const grupo = groupedTarjetas.value[codTarjeta];
+        const tarjeta = grupo?.find((t) => t.NCuota === NCuota);
+        if (tarjeta) {
+          cuotasSeleccionadas.push({
+            codTarjeta,
+            NCuota,
+            FormaPago: findFormaPagoById(codTarjeta)?.FormaPago || codTarjeta,
+            cuota: getCuota(tarjeta),
+            total: getTotal(tarjeta),
+          });
+        }
+      }
+    }
+  }
+
+  // ... el resto del código del PDF ...
 
   doc.setFont("times", "bold");
   doc.setFontSize(35);
@@ -184,7 +228,22 @@ const exportToPDF = () => {
     }
   );
   y += 10;
+  if (cuotasSeleccionadas.length > 0) {
+    y += 10;
+    doc.setFontSize(16);
+    doc.setTextColor(0);
+    doc.text("Formas de pago:", 15, y);
+    y += 8;
 
+    cuotasSeleccionadas.forEach((cuota, index) => {
+      const texto = `Opción ${index + 1}: ${cuota.NCuota} cuota${
+        cuota.NCuota > 1 ? "s" : ""
+      } de ${formatPrice(cuota.cuota)} con ${cuota.FormaPago.toUpperCase()}`;
+      doc.text(texto.normalize("NFC"), 15, y);
+      y += 7;
+    });
+  }
+  y += 8;
   doc.setFontSize(20);
   doc.setTextColor(150);
   doc.text(`Abril vive en vos!`.normalize("NFC"), 105, y, {
@@ -235,4 +294,26 @@ const getCuota = (tarjeta: any) => {
 };
 const marca = computed(() => findMarcasById(props.CodMarca)?.Marca || "Sin marca");
 const getTotal = (tarjeta: any) => getCuota(tarjeta) * tarjeta.NCuota;
+onMounted(() => {
+  console.log("Cuotas TNA:", cuotasTNA.value);
+});
+watchEffect(() => {
+  if (formaPagoPlanes.value.length) {
+    const cuotasTNA = formaPagoPlanes.value.filter((fp) => fp.CodForPago === "TNA");
+    console.log("💳 Cuotas TNA cargadas:", cuotasTNA);
+  }
+});
+watchEffect(() => {
+  for (const [codTarjeta, group] of Object.entries(groupedTarjetas.value)) {
+    if (!checkedMap.value[codTarjeta]) {
+      checkedMap.value[codTarjeta] = {};
+    }
+
+    for (const tarjeta of group) {
+      if (checkedMap.value[codTarjeta][tarjeta.NCuota] === undefined) {
+        checkedMap.value[codTarjeta][tarjeta.NCuota] = false;
+      }
+    }
+  }
+});
 </script>
